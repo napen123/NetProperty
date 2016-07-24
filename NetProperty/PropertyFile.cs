@@ -8,7 +8,7 @@ namespace NetProperty
     public class PropertyFile<T>
     {
         public string File;
-        public readonly Dictionary<string, T> Properties = new Dictionary<string, T>();
+        public Dictionary<string, T> Properties = new Dictionary<string, T>();
 
         public PropertyFile(string file, bool loadFile = true)
         {
