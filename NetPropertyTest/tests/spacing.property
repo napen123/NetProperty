@@ -1,0 +1,5 @@
+﻿# Should keep whitespace.
+space ~    Space!
+
+# Shouldn't keep whitespace.
+nospace =    No Space!

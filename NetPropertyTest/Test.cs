@@ -20,7 +20,7 @@ namespace NetPropertyTest
         [TestMethod]
         public void SaveAndLoadTest()
         {
-            const string file = "tests/save.simple.property";
+            const string file = "tests/saveload.property";
 
             new PropertyFile
             {
@@ -47,7 +47,16 @@ namespace NetPropertyTest
         [TestMethod]
         public void SpacingTest()
         {
-            const string file = "tests/save.varied.property";
+            var spacingProperty = new PropertyFile("tests/spacing.property");
+
+            Assert.AreEqual("    Space!", spacingProperty["space"]);
+            Assert.AreEqual("No Space!", spacingProperty["nospace"]);
+        }
+
+        [TestMethod]
+        public void SpacingSaveTest()
+        {
+            const string file = "tests/spacingsave.property";
 
             new PropertyFile
             {
