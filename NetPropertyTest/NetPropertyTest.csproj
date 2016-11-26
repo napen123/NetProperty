@@ -60,10 +60,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="tests\simple.property">
+    <None Include="tests\comment.property">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="tests\value.property">
+    <None Include="tests\simple.property">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

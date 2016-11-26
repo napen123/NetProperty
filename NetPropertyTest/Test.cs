@@ -11,66 +11,53 @@ namespace NetPropertyTest
         public void SimpleTest()
         {
             var property = new PropertyFile("tests/simple.property");
-            
+
+            Assert.AreEqual("Hello, World!", property.GetProperty("message"));
             Assert.AreEqual("Hello, World!", property["message"]);
         }
 
         [TestMethod]
-        public void ValueTest()
+        public void SaveAndLoadTest()
         {
-            var property = new PropertyFile<int>("tests/value.property");
+            const string file = "tests/save.simple.property";
 
-            Assert.AreEqual(100, property["int"]);
+            new PropertyFile
+            {
+                ["property.first"] = "First Property",
+                ["property.second"] = "Second Property",
+                ["property.third"] = "Third Property"
+            }.Save(file);
+
+            var stringProperty = new PropertyFile(file);
+
+            Assert.AreEqual("First Property", stringProperty["property.first"]);
+            Assert.AreEqual("Second Property", stringProperty["property.second"]);
+            Assert.AreEqual("Third Property", stringProperty["property.third"]);
         }
 
         [TestMethod]
-        public void SaveTest()
+        public void CommentTest()
         {
-            // Simple test
+            var commentProperty = new PropertyFile("tests/comment.property");
+
+            Assert.AreEqual("Hello, World!", commentProperty["message"]);
+        }
+
+        [TestMethod]
+        public void SpacingTest()
+        {
+            const string file = "tests/save.varied.property";
+
+            new PropertyFile
             {
-                new PropertyFile("tests/save.simple.property", false)
-                {
-                    ["property.first"] = "First Property",
-                    ["property.second"] = "Second Property",
-                    ["property.third"] = "Third Property"
-                }.Save();
+                ["nospace"] = "No spaces",
+                ["space"] = "    Four spaces"
+            }.Save(file);
 
-                var stringProperty = new PropertyFile("tests/save.simple.property");
+            var variedProperty = new PropertyFile(file);
 
-                Assert.AreEqual("First Property", stringProperty["property.first"]);
-                Assert.AreEqual("Second Property", stringProperty["property.second"]);
-                Assert.AreEqual("Third Property", stringProperty["property.third"]);
-            }
-
-            // Varied test
-            {
-                new PropertyFile("tests/save.varied.property", false)
-                {
-                    ["nospace"] = "No spaces",
-                    ["space"] = "    Four spaces"
-                }.Save();
-
-                var variedProperty = new PropertyFile("tests/save.varied.property");
-
-                Assert.AreEqual("No spaces", variedProperty["nospace"]);
-                Assert.AreEqual("    Four spaces", variedProperty["space"]);
-            }
-
-            // Typed test
-            {
-                new PropertyFile<int>("tests/save.typed.int.property", false) {["int"] = 100}.Save();
-                var integerProperty = new PropertyFile<int>("tests/save.typed.int.property");
-                Assert.AreEqual(100, integerProperty["int"]);
-
-                new PropertyFile<float>("tests/save.typed.float.property", false) {["float"] = 0.1f}.Save();
-                var floatProperty = new PropertyFile<float>("tests/save.typed.float.property");
-                Assert.AreEqual(0.1f, floatProperty["float"]);
-                
-                new PropertyFile<bool>("tests/save.typed.bool.property", false) {["true"] = true, ["false"] = false}.Save();
-                var boolProperty = new PropertyFile<bool>("tests/save.typed.bool.property");
-                Assert.AreEqual(true, boolProperty["true"]);
-                Assert.AreEqual(false, boolProperty["false"]);
-            }
+            Assert.AreEqual("No spaces", variedProperty["nospace"]);
+            Assert.AreEqual("    Four spaces", variedProperty["space"]);
         }
     }
 }
