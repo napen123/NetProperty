@@ -71,7 +71,7 @@ namespace NetProperty
             {
                 var trimmed = line.Trim();
 
-                if (trimmed.Length == 0 || trimmed.StartsWith("#"))
+                if (trimmed.Length == 0 || trimmed.StartsWith("#", StringComparison.Ordinal))
                     continue;
 
                 if (trimmed.Contains("="))
