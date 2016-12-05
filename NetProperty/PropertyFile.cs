@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Collections.Generic;
 
 namespace NetProperty
@@ -57,17 +58,34 @@ namespace NetProperty
         /// </summary>
         /// <remarks>
         /// A property's value will be overrided if there's a name clash (a read property has the same name).
+        /// <br />
+        /// The <paramref name="file"/> will be opened as UTF-8; use <see cref="Load(string,Encoding,bool)"/> for alternate encodings.
         /// </remarks>
         /// <param name="file">The property file to load.</param>
         /// <param name="clearProperties">Should existing <see cref="Properties"/> be cleared/removed?</param>
         public void Load(string file, bool clearProperties = true)
+        {
+            Load(file, Encoding.UTF8, clearProperties);
+        }
+
+        /// <summary>
+        /// Load a property <paramref name="file"/> with <paramref name="encoding"/>. If <paramref name="clearProperties"/> is <c>true</c>,
+        /// clear/remove all existing <see cref="Properties"/>; if <c>false</c>, add to the existing <see cref="Properties"/>.
+        /// </summary>
+        /// <remarks>
+        /// A property's value will be overrided if there's a name clash (a read property has the same name).
+        /// </remarks>
+        /// <param name="file">The property file to load.</param>
+        /// <param name="encoding">The encoding to use when opening the file.</param>
+        /// <param name="clearProperties">Should existing <see cref="Properties"/> be cleared/removed?</param>
+        public void Load(string file, Encoding encoding, bool clearProperties = true)
         {
             if (!File.Exists(file))
                 throw new IOException("Property file does not exist : " + file);
             if (clearProperties)
                 Properties.Clear();
 
-            foreach (var line in File.ReadLines(file))
+            foreach (var line in File.ReadLines(file, encoding))
             {
                 var trimmed = line.Trim();
 
@@ -78,7 +96,7 @@ namespace NetProperty
                 {
                     var name = trimmed.Substring(0, trimmed.IndexOf('=')).TrimEnd();
                     var value = trimmed.Substring(trimmed.IndexOf('=') + 1).TrimStart();
-                    
+
                     Properties[name] = value;
                 }
                 else if (trimmed.Contains("~"))
@@ -96,10 +114,26 @@ namespace NetProperty
         /// <summary>
         /// Save the <seealso cref="Properties"/> to a <paramref name="file"/>.
         /// </summary>
+        /// <remarks>
+        /// The <paramref name="file"/> is saved as UTF-8; use <see cref="Save(string,Encoding)"/> for alternate encodings.
+        /// </remarks>
         /// <param name="file">The file to save to.</param>
         public void Save(string file)
         {
-            using (var writer = new StreamWriter(file))
+            Save(file, Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// Save the <seealso cref="Properties"/> to a <paramref name="file"/> with <paramref name="encoding"/>.
+        /// </summary>
+        /// <remarks>
+        /// The <paramref name="file"/> is saved as UTF-8; use <see cref="Save(string,Encoding)"/> for alternate encodings.
+        /// </remarks>
+        /// <param name="file">The file to save to.</param>
+        /// <param name="encoding">The encoding to save the file as.</param>
+        public void Save(string file, Encoding encoding)
+        {
+            using (var writer = new StreamWriter(File.Open(file, FileMode.Create), encoding))
             {
                 foreach (var property in Properties)
                 {
