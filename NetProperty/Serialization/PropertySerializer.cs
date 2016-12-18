@@ -3,8 +3,26 @@ using System.Reflection;
 
 namespace NetProperty.Serialization
 {
+    /// <summary>
+    /// Serializes and deserializes objects to and from files.
+    /// </summary>
     public static class PropertySerializer
     {
+        /// <summary>
+        /// Serialize <paramref name="obj"/> and writes it to a <paramref name="file"/>.
+        /// </summary>
+        /// <param name="file">The file to write to.</param>
+        /// <param name="obj">The object to serialize.</param>
+        public static void Serialize(string file, object obj)
+        {
+            Serialize(File.Open(file, FileMode.Create), obj);
+        }
+
+        /// <summary>
+        /// Serialize <paramref name="obj"/> and writes it to a <paramref name="stream"/>.
+        /// </summary>
+        /// <param name="stream">The stream to write to.</param>
+        /// <param name="obj">The object to serialize.</param>
         public static void Serialize(Stream stream, object obj)
         {
             using (var writer = new StreamWriter(stream))
@@ -46,6 +64,27 @@ namespace NetProperty.Serialization
             }
         }
 
+        /// <summary>
+        /// Deserialize a <paramref name="file"/> into a <see cref="PropertyFile"/>.
+        /// </summary>
+        /// <remarks>
+        /// This is equivalent to using one of the constructors/using one of the load methods.
+        /// </remarks>
+        /// <param name="file">The file to deserialize.</param>
+        /// <returns>Returns a <see cref="PropertyFile"/>.</returns>
+        public static PropertyFile Deserialize(string file)
+        {
+            return new PropertyFile(file);
+        }
+
+        /// <summary>
+        /// Deserialize a <paramref name="stream"/> into a <see cref="PropertyFile"/>.
+        /// </summary>
+        /// <remarks>
+        /// This is equivalent to using one of the constructors/using one of the load methods.
+        /// </remarks>
+        /// <param name="stream">The stream to deserialize.</param>
+        /// <returns>Returns a <see cref="PropertyFile"/>.</returns>
         public static PropertyFile Deserialize(Stream stream)
         {
             return new PropertyFile(stream);
