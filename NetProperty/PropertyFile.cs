@@ -168,24 +168,41 @@ namespace NetProperty
         }
 
         /// <summary>
-        /// Save the <seealso cref="Properties"/> to a <paramref name="file"/> with <paramref name="encoding"/>.
+        /// Save the <seealso cref="Properties"/> to a <paramref name="stream"/>.
         /// </summary>
         /// <remarks>
-        /// The <paramref name="file"/> is saved as UTF-8; use <see cref="Save(string,Encoding)"/> for alternate encodings.
+        /// The <paramref name="stream"/> is saved as UTF-8; use <see cref="Save(Stream,Encoding)"/> for alternate encodings.
         /// </remarks>
+        /// <param name="stream">The stream to save to.</param>
+        public void Save(Stream stream)
+        {
+            Save(stream, Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// Save the <seealso cref="Properties"/> to a <paramref name="file"/> with <paramref name="encoding"/>.
+        /// </summary>
         /// <param name="file">The file to save to.</param>
-        /// <param name="encoding">The encoding to save the file as.</param>
+        /// <param name="encoding">The encoding to save as.</param>
         public void Save(string file, Encoding encoding)
         {
-            using (var writer = new StreamWriter(File.Open(file, FileMode.Create), encoding))
+            Save(File.Open(file, FileMode.Create), encoding);
+        }
+
+        /// <summary>
+        /// Save the <seealso cref="Properties"/> to a <paramref name="stream"/> with <paramref name="encoding"/>.
+        /// </summary>
+        /// <param name="stream">The stream to save to.</param>
+        /// <param name="encoding">The encoding to save as.</param>
+        public void Save(Stream stream, Encoding encoding)
+        {
+            using (var writer = new StreamWriter(stream, encoding))
             {
                 foreach (var property in Properties)
                 {
                     var value = property.Value;
-
-                    if (string.IsNullOrEmpty(value))
-                        writer.WriteLine(property.Key + " =");
-                    else if (char.IsWhiteSpace(value[0]))
+                    
+                    if (!string.IsNullOrEmpty(value) && char.IsWhiteSpace(value[0]))
                         writer.WriteLine(property.Key + " ~" + value);
                     else
                         writer.WriteLine(property.Key + " = " + value);
