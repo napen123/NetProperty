@@ -107,7 +107,7 @@ namespace NetProperty
                     Properties[name] = value;
                 }
                 else
-                    throw new Exception("Expected either \'=\' or \'~\' : " + line);
+                    throw new InvalidPropertyException("Expected either \'=\' or \'~\' : " + line);
             }
         }
 
