@@ -105,9 +105,6 @@ namespace NetProperty
         /// <param name="clearProperties">Should existing <see cref="Properties"/> be cleared/removed?</param>
         public void Load(string file, Encoding encoding, bool clearProperties = true)
         {
-            if (!File.Exists(file))
-                throw new IOException("Property file does not exist : " + file);
-            
             Load(File.Open(file, FileMode.Open), encoding, clearProperties);
         }
 
@@ -121,6 +118,7 @@ namespace NetProperty
         /// <param name="stream">The stream to read from.</param>
         /// <param name="encoding">The encoding to use when opening the file.</param>
         /// <param name="clearProperties">Should existing <see cref="Properties"/> be cleared/removed?</param>
+        /// <exception cref="InvalidPropertyException">Thrown when a property is declared incorrectly.</exception>
         public void Load(Stream stream, Encoding encoding, bool clearProperties = true)
         {
             if (clearProperties)

@@ -1,4 +1,6 @@
-﻿using NetProperty;
+﻿using System;
+using System.IO;
+using NetProperty;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -68,12 +70,24 @@ namespace NetPropertyTest
             Assert.AreEqual("No spaces", variedProperty["nospace"]);
             Assert.AreEqual("    Four spaces", variedProperty["space"]);
         }
-        
+
+        #if DEBUG
+
         [TestMethod]
-        [ExpectedException(typeof(InvalidPropertyException))]
         public void ErrorTest()
         {
-            new PropertyFile().Load("tests/error.property");
+            try
+            {
+                new PropertyFile("tests/error.property");
+            }
+            catch (InvalidPropertyException)
+            {
+                return;
+            }
+
+            Assert.Fail("InvalidPropertyException should have been thrown!");
         }
+
+        #endif
     }
 }
