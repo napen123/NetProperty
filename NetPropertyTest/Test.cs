@@ -68,15 +68,12 @@ namespace NetPropertyTest
             Assert.AreEqual("No spaces", variedProperty["nospace"]);
             Assert.AreEqual("    Four spaces", variedProperty["space"]);
         }
-
-        // TODO: Fix me!
-        /*
+        
         [TestMethod]
         [ExpectedException(typeof(InvalidPropertyException))]
         public void ErrorTest()
         {
             new PropertyFile().Load("tests/error.property");
         }
-        */
     }
 }
