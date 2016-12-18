@@ -11,7 +11,7 @@ namespace NetProperty.Serialization
 
         public PropertyAttribute(string name)
         {
-            if(name.Contains("=") || name.Contains("~"))
+            if (name != null && (name.Contains("=") || name.Contains("~")))
                 throw new InvalidPropertyException("Property names cannot contain \"=\" or \"~\" : " + name);
 
             Name = name;

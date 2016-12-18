@@ -31,36 +31,10 @@ namespace NetProperty.Serialization
                 const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
 
                 foreach (var field in type.GetFields(flags))
-                {
-                    var attr = field.GetCustomAttribute<PropertyAttribute>();
-                    var value = field.GetValue(obj);
-
-                    if(value == null)
-                        continue;
-
-                    var str = value.ToString();
-                    
-                    if (str.Length > 0 && char.IsWhiteSpace(str[0]))
-                        writer.WriteLine(attr == null ? $"{field.Name} ~{str}" : $"{attr.Name} ~{str}");
-                    else
-                        writer.WriteLine(attr == null ? $"{field.Name} = {str}" : $"{attr.Name} = {str}");
-                }
+                    WriteProperty(writer, field.GetCustomAttribute<PropertyAttribute>(), field.Name, field.GetValue(obj));
 
                 foreach (var property in type.GetProperties(flags))
-                {
-                    var attr = property.GetCustomAttribute<PropertyAttribute>();
-                    var value = property.GetValue(obj);
-
-                    if (value == null)
-                        continue;
-
-                    var str = value.ToString();
-                    
-                    if (str.Length > 0 && char.IsWhiteSpace(str[0]))
-                        writer.WriteLine(attr == null ? $"{property.Name} ~{str}" : $"{attr.Name} ~{str}");
-                    else
-                        writer.WriteLine(attr == null ? $"{property.Name} = {str}" : $"{attr.Name} = {str}");
-                }
+                    WriteProperty(writer, property.GetCustomAttribute<PropertyAttribute>(), property.Name, property.GetValue(obj));
             }
         }
 
@@ -88,6 +62,20 @@ namespace NetProperty.Serialization
         public static PropertyFile Deserialize(Stream stream)
         {
             return new PropertyFile(stream);
+        }
+
+        private static void WriteProperty(TextWriter writer, PropertyAttribute attr, string orig, object obj)
+        {
+            if (obj == null)
+                return;
+
+            var name = attr == null ? orig : (attr.Name ?? orig);
+            var value = obj.ToString();
+
+            if (value.Length > 0 && char.IsWhiteSpace(value[0]))
+                writer.WriteLine($"{name} ~{value}");
+            else
+                writer.WriteLine($"{name} = {value}");
         }
     }
 }

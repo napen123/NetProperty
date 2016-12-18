@@ -13,7 +13,7 @@ namespace NetPropertyTest
         {
             [Property("test.integer")]
             public int TestInteger;
-
+            
             public bool TestBoolean;
 
             [Property("TEST STRING")]
