@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using NetProperty;
+﻿using NetProperty;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
