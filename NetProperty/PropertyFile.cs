@@ -33,6 +33,15 @@ namespace NetProperty
         }
 
         /// <summary>
+        /// Create a new property file by loading an existing one in a <paramref name="stream"/>.
+        /// </summary>
+        /// <param name="stream">The stream to read from.</param>
+        public PropertyFile(Stream stream)
+        {
+            Load(stream);
+        }
+
+        /// <summary>
         /// Set a property's value.
         /// </summary>
         /// <param name="name">The name of the property.</param>
@@ -57,7 +66,7 @@ namespace NetProperty
         /// clear/remove all existing <see cref="Properties"/>; if <c>false</c>, add to the existing <see cref="Properties"/>.
         /// </summary>
         /// <remarks>
-        /// A property's value will be overrided if there's a name clash (a read property has the same name).
+        /// A property's value will be overrided if there's a name clash (two properties have the same name).
         /// <br />
         /// The <paramref name="file"/> will be opened as UTF-8; use <see cref="Load(string,Encoding,bool)"/> for alternate encodings.
         /// </remarks>
@@ -69,11 +78,27 @@ namespace NetProperty
         }
 
         /// <summary>
+        /// Load a property file from a <paramref name="stream"/>. If <paramref name="clearProperties"/> is <c>true</c>,
+        /// clear/remove all existing <see cref="Properties"/>; if <c>false</c>, add to the existing <see cref="Properties"/>.
+        /// </summary>
+        /// <remarks>
+        /// A property's value will be overrided if there's a name clash (two properties have the same name).
+        /// <br />
+        /// The <paramref name="stream"/> will be opened as UTF-8; use <see cref="Load(Stream,Encoding,bool)"/> for alternate encodings.
+        /// </remarks>
+        /// <param name="stream">The stream to read from.</param>
+        /// <param name="clearProperties">Should existing <see cref="Properties"/> be cleared/removed?</param>
+        public void Load(Stream stream, bool clearProperties = true)
+        {
+            Load(stream, Encoding.UTF8, clearProperties);
+        }
+
+        /// <summary>
         /// Load a property <paramref name="file"/> with <paramref name="encoding"/>. If <paramref name="clearProperties"/> is <c>true</c>,
         /// clear/remove all existing <see cref="Properties"/>; if <c>false</c>, add to the existing <see cref="Properties"/>.
         /// </summary>
         /// <remarks>
-        /// A property's value will be overrided if there's a name clash (a read property has the same name).
+        /// A property's value will be overrided if there's a name clash (two properties have the same name).
         /// </remarks>
         /// <param name="file">The property file to load.</param>
         /// <param name="encoding">The encoding to use when opening the file.</param>
@@ -82,32 +107,53 @@ namespace NetProperty
         {
             if (!File.Exists(file))
                 throw new IOException("Property file does not exist : " + file);
+            
+            Load(File.Open(file, FileMode.Open), encoding, clearProperties);
+        }
+
+        /// <summary>
+        /// Load a property file from a <paramref name="stream"/>, with <paramref name="encoding"/>. If <paramref name="clearProperties"/> is <c>true</c>,
+        /// clear/remove all existing <see cref="Properties"/>; if <c>false</c>, add to the existing <see cref="Properties"/>.
+        /// </summary>
+        /// <remarks>
+        /// A property's value will be overrided if there's a name clash (two properties have the same name).
+        /// </remarks>
+        /// <param name="stream">The stream to read from.</param>
+        /// <param name="encoding">The encoding to use when opening the file.</param>
+        /// <param name="clearProperties">Should existing <see cref="Properties"/> be cleared/removed?</param>
+        public void Load(Stream stream, Encoding encoding, bool clearProperties = true)
+        {
             if (clearProperties)
                 Properties.Clear();
 
-            foreach (var line in File.ReadLines(file, encoding))
+            using (var reader = new StreamReader(stream, encoding))
             {
-                var trimmed = line.Trim();
+                string line;
 
-                if (trimmed.Length == 0 || trimmed.StartsWith("#", StringComparison.Ordinal))
-                    continue;
-
-                if (trimmed.Contains("="))
+                while ((line = reader.ReadLine()) != null)
                 {
-                    var name = trimmed.Substring(0, trimmed.IndexOf('=')).TrimEnd();
-                    var value = trimmed.Substring(trimmed.IndexOf('=') + 1).TrimStart();
+                    var trimmed = line.TrimStart();
 
-                    Properties[name] = value;
-                }
-                else if (trimmed.Contains("~"))
-                {
-                    var name = trimmed.Substring(0, trimmed.IndexOf("~", StringComparison.Ordinal)).TrimEnd();
-                    var value = trimmed.Substring(trimmed.IndexOf("~", StringComparison.Ordinal) + 1);
+                    if (trimmed.Length == 0 || trimmed.StartsWith("#", StringComparison.Ordinal))
+                        continue;
 
-                    Properties[name] = value;
+                    if (trimmed.Contains("="))
+                    {
+                        var name = trimmed.Substring(0, trimmed.IndexOf('=')).TrimEnd();
+                        var value = trimmed.Substring(trimmed.IndexOf('=') + 1).TrimStart();
+
+                        Properties[name] = value;
+                    }
+                    else if (trimmed.Contains("~"))
+                    {
+                        var name = trimmed.Substring(0, trimmed.IndexOf("~", StringComparison.Ordinal)).TrimEnd();
+                        var value = trimmed.Substring(trimmed.IndexOf("~", StringComparison.Ordinal) + 1);
+
+                        Properties[name] = value;
+                    }
+                    else
+                        throw new InvalidPropertyException("Expected either \'=\' or \'~\' : " + line);
                 }
-                else
-                    throw new InvalidPropertyException("Expected either \'=\' or \'~\' : " + line);
             }
         }
 
