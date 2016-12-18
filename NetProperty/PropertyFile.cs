@@ -42,7 +42,7 @@ namespace NetProperty
         }
 
         /// <summary>
-        /// Set a property's value.
+        /// Set a property's value. If it doesn't exist, it will be created.
         /// </summary>
         /// <param name="name">The name of the property.</param>
         /// <param name="value">The property's new value.</param>
@@ -55,7 +55,7 @@ namespace NetProperty
         /// Get a property's value.
         /// </summary>
         /// <param name="name">The property's name.</param>
-        /// <returns>If a property has that <paramref name="name"/>, return its value; otherwise, return <c>null</c>.</returns>
+        /// <returns>If a property exists with that <paramref name="name"/>, return its value; otherwise, return <c>null</c>.</returns>
         public string GetProperty(string name)
         {
             return (from property in Properties where property.Key == name select property.Value).FirstOrDefault();
@@ -198,8 +198,8 @@ namespace NetProperty
         /// <summary>
         /// Get and set a property's value.
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="name">The property's name.</param>
+        /// <returns>Returns the property's value; if it doesn't exist, returns <c>null</c>.</returns>
         public string this[string name]
         {
             get { return GetProperty(name); }
