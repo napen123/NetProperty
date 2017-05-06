@@ -11,7 +11,7 @@ namespace NetPropertyTest
         public void SimpleTest()
         {
             var property = new PropertyFile("tests/simple.property");
-
+            
             Assert.AreEqual("Hello, World!", property.GetProperty("message"));
             Assert.AreEqual("Hello, World!", property["message"]);
         }

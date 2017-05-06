@@ -217,8 +217,8 @@ namespace NetProperty
         /// <returns>Returns the property's value; if it doesn't exist, returns <c>null</c>.</returns>
         public string this[string name]
         {
-            get { return GetProperty(name); }
-            set { SetProperty(name, value); }
+            get => GetProperty(name);
+            set => SetProperty(name, value);
         }
     }
 }
