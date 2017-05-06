@@ -23,7 +23,7 @@ namespace NetPropertyTest
             public string TestWhitespace;
 
             [Property("testFloat")]
-            public float TestFloat { get; private set; } = 5.5f;
+            public float TestFloat { get; set; }
         }
 
         [TestMethod]
@@ -38,7 +38,8 @@ namespace NetPropertyTest
                     TestBoolean = true,
                     TestInteger = 123456,
                     TestString = "This is a test string!",
-                    TestWhitespace = "    "
+                    TestWhitespace = "    ",
+                    TestFloat = 5.5f
                 };
 
                 PropertySerializer.Serialize(File.Open(file, FileMode.Create), test);
