@@ -10,8 +10,26 @@ namespace NetPropertyTest
     [TestClass]
     public class SerializationTest
     {
+        public class TestConverter : PropertyConverter
+        {
+            public override string Serialize(object value)
+            {
+                return "-->" + (value as TestClass.InnerTestClass).InnerName;
+            }
+
+            public override object Deserialize(string value)
+            {
+                return new TestClass.InnerTestClass {InnerName = value.Substring(3)};
+            }
+        }
+
         public class TestClass
         {
+            public class InnerTestClass
+            {
+                public string InnerName;
+            }
+
             [Property("test.integer")]
             public int TestInteger;
             
@@ -19,12 +37,15 @@ namespace NetPropertyTest
             
             [Property("TEST STRING")]
             public string TestString;
-
+            
             [Property("whitespace")]
             public string TestWhitespace;
 
             [NonSerialized]
             public string TestDontSerialize;
+
+            [Property("test.inner.class", typeof(TestConverter))]
+            public InnerTestClass TestInnerClass;
 
             [Property("testFloat")]
             public float TestFloat { get; set; }
@@ -44,7 +65,12 @@ namespace NetPropertyTest
                     TestString = "This is a test string!",
                     TestWhitespace = "    ",
                     TestDontSerialize = "Don't serialize me!",
-                    TestFloat = 5.5f
+                    TestFloat = 5.5f,
+
+                    TestInnerClass = new TestClass.InnerTestClass
+                    {
+                        InnerName = "Inner-class test"
+                    }
                 };
 
                 PropertySerializer.Serialize(File.Open(file, FileMode.Create), test);
@@ -59,8 +85,11 @@ namespace NetPropertyTest
                 Assert.AreEqual("This is a test string!", test.TestString);
                 Assert.AreEqual("    ", test.TestWhitespace);
                 Assert.AreEqual(5.5f, test.TestFloat);
-
+                
                 Assert.IsNull(test.TestDontSerialize);
+
+                Assert.IsNotNull(test.TestInnerClass);
+                Assert.AreEqual("Inner-class test", test.TestInnerClass.InnerName);
             }
         }
     }

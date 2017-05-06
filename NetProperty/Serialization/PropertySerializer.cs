@@ -36,8 +36,23 @@ namespace NetProperty.Serialization
                     if(field.GetCustomAttribute<NonSerializedAttribute>() != null)
                         continue;
 
-                    WriteProperty(writer, field.GetCustomAttribute<PropertyAttribute>(), field.Name,
-                        field.GetValue(obj));
+                    string name, value;
+                    var attr = field.GetCustomAttribute<PropertyAttribute>();
+
+                    if (attr == null)
+                    {
+                        name = field.Name;
+                        value = field.GetValue(obj).ToString();
+                    }
+                    else
+                    {
+                        name = attr.Name;
+                        value = attr.Converter != null
+                            ? attr.Converter.Serialize(field.GetValue(obj))
+                            : field.GetValue(obj).ToString();
+                    }
+
+                    WriteProperty(writer, name, value);
                 }
 
                 foreach (var property in type.GetProperties(flags))
@@ -45,9 +60,24 @@ namespace NetProperty.Serialization
                     if (property.GetCustomAttribute<NonSerializedAttribute>() != null ||
                         property.GetSetMethod() == null)
                         continue;
-                    
-                    WriteProperty(writer, property.GetCustomAttribute<PropertyAttribute>(), property.Name,
-                        property.GetValue(obj));
+
+                    string name, value;
+                    var attr = property.GetCustomAttribute<PropertyAttribute>();
+
+                    if (attr == null)
+                    {
+                        name = property.Name;
+                        value = property.GetValue(obj).ToString();
+                    }
+                    else
+                    {
+                        name = attr.Name;
+                        value = attr.Converter != null
+                            ? attr.Converter.Serialize(property.GetValue(obj))
+                            : property.GetValue(obj).ToString();
+                    }
+
+                    WriteProperty(writer, name, value);
                 }
             }
         }
@@ -81,7 +111,7 @@ namespace NetProperty.Serialization
             {
                 if (field.GetCustomAttribute<NonSerializedAttribute>() != null)
                     continue;
-
+                
                 var attr = field.GetCustomAttribute<PropertyAttribute>();
                 var name = attr == null ? field.Name : attr.Name;
                 var value = pFile[name];
@@ -92,8 +122,11 @@ namespace NetProperty.Serialization
 
                     continue;
                 }
-                
-                field.SetValue(ret, Convert.ChangeType(value, field.FieldType));
+
+                field.SetValue(ret,
+                    attr?.Converter != null
+                        ? attr.Converter.Deserialize(value)
+                        : Convert.ChangeType(value, field.FieldType));
             }
             
             foreach (var property in type.GetProperties(flags))
@@ -112,21 +145,18 @@ namespace NetProperty.Serialization
 
                     continue;
                 }
-                
-                property.SetValue(ret, Convert.ChangeType(value, property.PropertyType));
+
+                property.SetValue(ret,
+                    attr?.Converter != null
+                        ? attr.Converter.Deserialize(value)
+                        : Convert.ChangeType(value, property.PropertyType));
             }
 
             return ret;
         }
 
-        private static void WriteProperty(TextWriter writer, PropertyAttribute attr, string orig, object obj)
+        private static void WriteProperty(TextWriter writer, string name, string value)
         {
-            if (obj == null)
-                return;
-
-            var name = attr == null ? orig : (attr.Name ?? orig);
-            var value = obj.ToString();
-
             if (value.Length > 0 && char.IsWhiteSpace(value[0]))
                 writer.WriteLine($"{name} ~{value}");
             else
