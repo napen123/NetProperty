@@ -1,3 +1,5 @@
+# 2.0.0
+
 # 1.1.0
 * Basic serialization and deserialization (Serialization namespace).
 * Streams are now accepted when saving and loading.
