@@ -9,7 +9,7 @@ namespace NetProperty.Serialization
     public static class PropertySerializer
     {
         /// <summary>
-        /// Serialize <paramref name="obj"/> and writes it to a <paramref name="file"/>.
+        /// Serialize <paramref name="obj"/> and write it to a <paramref name="file"/>.
         /// </summary>
         /// <param name="file">The file to write to.</param>
         /// <param name="obj">The object to serialize.</param>
@@ -19,7 +19,7 @@ namespace NetProperty.Serialization
         }
 
         /// <summary>
-        /// Serialize <paramref name="obj"/> and writes it to a <paramref name="stream"/>.
+        /// Serialize <paramref name="obj"/> and write it to a <paramref name="stream"/>.
         /// </summary>
         /// <param name="stream">The stream to write to.</param>
         /// <param name="obj">The object to serialize.</param>
