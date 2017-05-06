@@ -24,7 +24,7 @@ namespace NetProperty
         }
 
         /// <summary>
-        /// Create a new property <paramref name="file"/> by loading an existing one.
+        /// Create a new PropertyFile by loading from an existing <paramref name="file"/>.
         /// </summary>
         /// <param name="file">The property file to load.</param>
         public PropertyFile(string file)
@@ -33,7 +33,7 @@ namespace NetProperty
         }
 
         /// <summary>
-        /// Create a new property file by loading an existing one in a <paramref name="stream"/>.
+        /// Create a new PropertyFile by loading from an existing <paramref name="stream"/>.
         /// </summary>
         /// <param name="stream">The stream to read from.</param>
         public PropertyFile(Stream stream)
