@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 using NetProperty.Serialization;
 
@@ -15,12 +16,15 @@ namespace NetPropertyTest
             public int TestInteger;
             
             public bool TestBoolean;
-
+            
             [Property("TEST STRING")]
             public string TestString;
 
             [Property("whitespace")]
             public string TestWhitespace;
+
+            [NonSerialized]
+            public string TestDontSerialize;
 
             [Property("testFloat")]
             public float TestFloat { get; set; }
@@ -39,6 +43,7 @@ namespace NetPropertyTest
                     TestInteger = 123456,
                     TestString = "This is a test string!",
                     TestWhitespace = "    ",
+                    TestDontSerialize = "Don't serialize me!",
                     TestFloat = 5.5f
                 };
 
@@ -47,13 +52,15 @@ namespace NetPropertyTest
 
             // Deserialize
             {
-                var test = PropertySerializer.Deserialize(File.Open(file, FileMode.Open));
+                var test = PropertySerializer.Deserialize<TestClass>(File.Open(file, FileMode.Open));
+                
+                Assert.AreEqual(true, test.TestBoolean);
+                Assert.AreEqual(123456, test.TestInteger);
+                Assert.AreEqual("This is a test string!", test.TestString);
+                Assert.AreEqual("    ", test.TestWhitespace);
+                Assert.AreEqual(5.5f, test.TestFloat);
 
-                Assert.AreEqual(true, bool.Parse(test["TestBoolean"]));
-                Assert.AreEqual(123456, int.Parse(test["test.integer"]));
-                Assert.AreEqual("This is a test string!", test["TEST STRING"]);
-                Assert.AreEqual("    ", test["whitespace"]);
-                Assert.AreEqual(5.5f, float.Parse(test["testFloat"]));
+                Assert.IsNull(test.TestDontSerialize);
             }
         }
     }

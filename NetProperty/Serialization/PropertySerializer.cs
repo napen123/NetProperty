@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 
 namespace NetProperty.Serialization
@@ -31,37 +32,91 @@ namespace NetProperty.Serialization
                 const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
 
                 foreach (var field in type.GetFields(flags))
-                    WriteProperty(writer, field.GetCustomAttribute<PropertyAttribute>(), field.Name, field.GetValue(obj));
+                {
+                    if(field.GetCustomAttribute<NonSerializedAttribute>() != null)
+                        continue;
+
+                    WriteProperty(writer, field.GetCustomAttribute<PropertyAttribute>(), field.Name,
+                        field.GetValue(obj));
+                }
 
                 foreach (var property in type.GetProperties(flags))
-                    WriteProperty(writer, property.GetCustomAttribute<PropertyAttribute>(), property.Name, property.GetValue(obj));
+                {
+                    if (property.GetCustomAttribute<NonSerializedAttribute>() != null ||
+                        property.GetSetMethod() == null)
+                        continue;
+                    
+                    WriteProperty(writer, property.GetCustomAttribute<PropertyAttribute>(), property.Name,
+                        property.GetValue(obj));
+                }
             }
         }
 
         /// <summary>
-        /// Deserialize a <paramref name="file"/> into a <see cref="PropertyFile"/>.
+        /// Deserialize a <paramref name="file"/> into an instance of <typeparamref name="T"/>.
         /// </summary>
-        /// <remarks>
-        /// This is equivalent to using one of the constructors/using one of the load methods.
-        /// </remarks>
         /// <param name="file">The file to deserialize.</param>
-        /// <returns>Returns a <see cref="PropertyFile"/>.</returns>
-        public static PropertyFile Deserialize(string file)
+        /// <returns>Returns a new instance of <typeparamref name="T"/>.</returns>
+        public static T Deserialize<T>(string file)
+            where T : new()
         {
-            return new PropertyFile(file);
+            return Deserialize<T>(File.Open(file, FileMode.Open));
         }
 
         /// <summary>
-        /// Deserialize a <paramref name="stream"/> into a <see cref="PropertyFile"/>.
+        /// Deserialize a <paramref name="stream"/> into an instance of <typeparamref name="T"/>.
         /// </summary>
-        /// <remarks>
-        /// This is equivalent to using one of the constructors/using one of the load methods.
-        /// </remarks>
         /// <param name="stream">The stream to deserialize.</param>
-        /// <returns>Returns a <see cref="PropertyFile"/>.</returns>
-        public static PropertyFile Deserialize(Stream stream)
+        /// <returns>Returns a new instance of <typeparamref name="T"/>.</returns>
+        public static T Deserialize<T>(Stream stream)
+            where T : new()
         {
-            return new PropertyFile(stream);
+            var ret = new T();
+            var type = ret.GetType();
+            var pFile = new PropertyFile(stream);
+
+            const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
+
+            foreach (var field in type.GetFields(flags))
+            {
+                if (field.GetCustomAttribute<NonSerializedAttribute>() != null)
+                    continue;
+
+                var attr = field.GetCustomAttribute<PropertyAttribute>();
+                var name = attr == null ? field.Name : attr.Name;
+                var value = pFile[name];
+
+                if (value == null)
+                {
+                    // TODO: Handle
+
+                    continue;
+                }
+                
+                field.SetValue(ret, Convert.ChangeType(value, field.FieldType));
+            }
+            
+            foreach (var property in type.GetProperties(flags))
+            {
+                if (property.GetCustomAttribute<NonSerializedAttribute>() != null ||
+                    property.GetSetMethod() == null)
+                    continue;
+
+                var attr = property.GetCustomAttribute<PropertyAttribute>();
+                var name = attr == null ? property.Name : attr.Name;
+                var value = pFile[name];
+                
+                if (value == null)
+                {
+                    // TODO: Handle
+
+                    continue;
+                }
+                
+                property.SetValue(ret, Convert.ChangeType(value, property.PropertyType));
+            }
+
+            return ret;
         }
 
         private static void WriteProperty(TextWriter writer, PropertyAttribute attr, string orig, object obj)
