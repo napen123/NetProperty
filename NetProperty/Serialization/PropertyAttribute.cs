@@ -46,11 +46,7 @@ namespace NetProperty.Serialization
                 throw new InvalidPropertyException("Property names cannot contain \"=\" or \"~\" : " + name);
 
             Name = name;
-
-            if (converter == null)
-                Converter = null;
-            else
-                Converter = Activator.CreateInstance(converter) as PropertyConverter;
+            Converter = converter == null ? null : Activator.CreateInstance(converter) as PropertyConverter;
         }
     }
 }
