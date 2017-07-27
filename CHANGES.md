@@ -1,4 +1,8 @@
 # 2.0.0
+* Add property converters (NetProperty.Serialization.PropertyConverter) for (de)serialization.
+* Ability to deserialize into a provided type.
+* Some documentation updates.
+* Minor fixes.
 
 # 1.1.0
 * Basic serialization and deserialization (Serialization namespace).
