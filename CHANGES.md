@@ -1,5 +1,7 @@
 # 2.0.0
-* Add property converters (NetProperty.Serialization.PropertyConverter) for (de)serialization.
+* More error checking in PropertyAttribute(string, Type).
+* Add AttributeUsage to PropertyAttribute (fields and properties only).
+* Add property converters (NetProperty.Serialization.PropertyConverter) for serialization and deserialization.
 * Ability to deserialize into a provided type.
 * Some documentation updates.
 * Minor fixes.
