@@ -53,7 +53,7 @@ namespace NetProperty.Serialization
                     }
                     else
                     {
-                        name = attr.Name;
+                        name = attr.Name ?? field.Name;
                         value = attr.Converter != null
                             ? attr.Converter.Serialize(field.GetValue(obj))
                             : field.GetValue(obj).ToString();
@@ -78,7 +78,7 @@ namespace NetProperty.Serialization
                     }
                     else
                     {
-                        name = attr.Name;
+                        name = attr.Name ?? property.Name;
                         value = attr.Converter != null
                             ? attr.Converter.Serialize(property.GetValue(obj))
                             : property.GetValue(obj).ToString();
@@ -120,7 +120,7 @@ namespace NetProperty.Serialization
                     continue;
                 
                 var attr = field.GetCustomAttribute<PropertyAttribute>();
-                var name = attr == null ? field.Name : attr.Name;
+                var name = attr == null ? field.Name : (attr.Name ?? field.Name);
                 var value = pFile[name];
 
                 if (value == null)
@@ -143,7 +143,7 @@ namespace NetProperty.Serialization
                     continue;
 
                 var attr = property.GetCustomAttribute<PropertyAttribute>();
-                var name = attr == null ? property.Name : attr.Name;
+                var name = attr == null ? property.Name : (attr.Name ?? property.Name);
                 var value = pFile[name];
                 
                 if (value == null)

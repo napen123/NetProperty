@@ -1,5 +1,6 @@
 # 2.0.0
 * More error checking in PropertyAttribute(string, Type).
+* Add PropertyAttribute(Type). (This will use the name of field/property when serializing and deserializing).
 * Add AttributeUsage to PropertyAttribute (fields and properties only).
 * Add property converters (NetProperty.Serialization.PropertyConverter) for serialization and deserialization.
 * Ability to deserialize into a provided type.

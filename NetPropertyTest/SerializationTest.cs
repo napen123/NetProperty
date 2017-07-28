@@ -47,6 +47,9 @@ namespace NetPropertyTest
             [Property("test.inner.class", typeof(TestConverter))]
             public InnerTestClass TestInnerClass;
 
+            [Property(typeof(TestConverter))]
+            public InnerTestClass TestNamelessClass;
+
             [Property("testFloat")]
             public float TestFloat { get; set; }
         }
@@ -70,6 +73,11 @@ namespace NetPropertyTest
                     TestInnerClass = new TestClass.InnerTestClass
                     {
                         InnerName = "Inner-class test"
+                    },
+
+                    TestNamelessClass = new TestClass.InnerTestClass
+                    {
+                        InnerName = "Only type test"
                     }
                 };
 
@@ -90,6 +98,9 @@ namespace NetPropertyTest
 
                 Assert.IsNotNull(test.TestInnerClass);
                 Assert.AreEqual("Inner-class test", test.TestInnerClass.InnerName);
+
+                Assert.IsNotNull(test.TestNamelessClass);
+                Assert.AreEqual("Only type test", test.TestNamelessClass.InnerName);
             }
         }
     }
