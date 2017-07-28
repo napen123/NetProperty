@@ -17,23 +17,23 @@ namespace NetProperty
         public Dictionary<string, string> Properties = new Dictionary<string, string>();
 
         /// <summary>
-        /// Default constructor.
+        /// Initializes a new instance of the PropertyFile with no properties.
         /// </summary>
         public PropertyFile()
         {
         }
 
         /// <summary>
-        /// Create a new PropertyFile by loading from an existing <paramref name="file"/>.
+        /// Initializes a new instance of the PropertyFile class from the specified existing property <paramref name="file"/>.
         /// </summary>
-        /// <param name="file">The property file to load.</param>
+        /// <param name="file">The existing property file to load.</param>
         public PropertyFile(string file)
         {
             Load(file);
         }
 
         /// <summary>
-        /// Create a new PropertyFile by loading from an existing <paramref name="stream"/>.
+        /// Initializes a new instance of the PropertyFile class from the specified existing property <paramref name="stream"/>.
         /// </summary>
         /// <param name="stream">The stream to read from.</param>
         public PropertyFile(Stream stream)
@@ -46,6 +46,7 @@ namespace NetProperty
         /// </summary>
         /// <param name="name">The name of the property.</param>
         /// <param name="value">The property's new value.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name" /> is null.</exception>
         public void SetProperty(string name, string value)
         {
             Properties[name] = value;
@@ -55,7 +56,7 @@ namespace NetProperty
         /// Get a property's value.
         /// </summary>
         /// <param name="name">The property's name.</param>
-        /// <returns>If a property exists with that <paramref name="name"/>, return its value; otherwise, return <c>null</c>.</returns>
+        /// <returns>If a property exists with the given <paramref name="name"/>, return its value; otherwise, return <c>null</c>.</returns>
         public string GetProperty(string name)
         {
             return (from property in Properties where property.Key == name select property.Value).FirstOrDefault();
@@ -103,6 +104,13 @@ namespace NetProperty
         /// <param name="file">The property file to load.</param>
         /// <param name="encoding">The encoding to use when opening the file.</param>
         /// <param name="clearProperties">Should existing <see cref="Properties"/> be cleared/removed?</param>
+        /// <exception cref="ArgumentException"><paramref name="file" /> is a zero-length string, contains only white space, or contains one or more invalid characters as defined by <see cref="Path.GetInvalidFileNameChars" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="file" /> is null. </exception>
+        /// <exception cref="PathTooLongException">
+        /// The specified <seealso cref="file"/> path exceeds the system-defined maximum length.
+        /// For example, on Windows-based platforms, paths must be less than 248 characters,
+        /// and file names must be less than 260 characters.
+        /// </exception>
         public void Load(string file, Encoding encoding, bool clearProperties = true)
         {
             Load(File.Open(file, FileMode.Open), encoding, clearProperties);
@@ -118,6 +126,7 @@ namespace NetProperty
         /// <param name="stream">The stream to read from.</param>
         /// <param name="encoding">The encoding to use when opening the file.</param>
         /// <param name="clearProperties">Should existing <see cref="Properties"/> be cleared/removed?</param>
+        /// <exception cref="IOException" />
         /// <exception cref="InvalidPropertyException">Thrown when a property is declared incorrectly.</exception>
         public void Load(Stream stream, Encoding encoding, bool clearProperties = true)
         {
@@ -184,6 +193,14 @@ namespace NetProperty
         /// </summary>
         /// <param name="file">The file to save to.</param>
         /// <param name="encoding">The encoding to save as.</param>
+        /// <exception cref="IOException" />
+        /// <exception cref="ArgumentException"><paramref name="file" /> is a zero-length string, contains only white space, or contains one or more invalid characters as defined by <see cref="Path.GetInvalidFileNameChars" />. </exception>
+        /// <exception cref="ArgumentNullException"><paramref name="file" /> is null. </exception>
+        /// <exception cref="PathTooLongException">
+        /// The specified <paramref name="file"/> path exceeds the system-defined maximum length.
+        /// For example, on Windows-based platforms, paths must be less than 248 characters,
+        /// and file names must be less than 260 characters.
+        /// </exception>
         public void Save(string file, Encoding encoding)
         {
             Save(File.Open(file, FileMode.Create), encoding);
@@ -194,6 +211,9 @@ namespace NetProperty
         /// </summary>
         /// <param name="stream">The stream to save to.</param>
         /// <param name="encoding">The encoding to save as.</param>
+        /// <exception cref="IOException" />
+        /// <exception cref="ArgumentException"><paramref name="stream" /> is not writable. </exception>
+        /// <exception cref="ArgumentNullException"><paramref name="stream" /> or <paramref name="encoding" /> is null. </exception>
         public void Save(Stream stream, Encoding encoding)
         {
             using (var writer = new StreamWriter(stream, encoding))
@@ -215,6 +235,7 @@ namespace NetProperty
         /// </summary>
         /// <param name="name">The property's name.</param>
         /// <returns>Returns the property's value; if it doesn't exist, returns <c>null</c>.</returns>
+        /// <exception cref="ArgumentNullException" accessor="set"><paramref name="name" /> is null.</exception>
         public string this[string name]
         {
             get => GetProperty(name);
