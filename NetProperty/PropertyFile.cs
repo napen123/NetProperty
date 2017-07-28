@@ -17,14 +17,14 @@ namespace NetProperty
         public Dictionary<string, string> Properties = new Dictionary<string, string>();
 
         /// <summary>
-        /// Initializes a new instance of the PropertyFile with no properties.
+        /// Initializes a new instance of PropertyFile with no properties.
         /// </summary>
         public PropertyFile()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the PropertyFile class from the specified existing property <paramref name="file"/>.
+        /// Initializes a new instance of PropertyFile class from the specified existing property <paramref name="file"/>.
         /// </summary>
         /// <param name="file">The existing property file to load.</param>
         public PropertyFile(string file)
@@ -33,7 +33,7 @@ namespace NetProperty
         }
 
         /// <summary>
-        /// Initializes a new instance of the PropertyFile class from the specified existing property <paramref name="stream"/>.
+        /// Initializes a new instance of PropertyFile class from the specified existing property <paramref name="stream"/>.
         /// </summary>
         /// <param name="stream">The stream to read from.</param>
         public PropertyFile(Stream stream)

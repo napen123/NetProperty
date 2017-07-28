@@ -5,7 +5,7 @@ using System.Reflection;
 namespace NetProperty.Serialization
 {
     /// <summary>
-    /// Serializes and deserializes objects to and from files.
+    /// Serializes and deserializes objects to and from property files.
     /// </summary>
     public static class PropertySerializer
     {
