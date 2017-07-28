@@ -14,6 +14,13 @@ namespace NetProperty.Serialization
         /// </summary>
         /// <param name="file">The file to write to.</param>
         /// <param name="obj">The object to serialize.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="file" /> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="file" /> is a zero-length string, contains only white space, or contains one or more invalid characters as defined by <see cref="Path.GetInvalidFileNameChars" />.</exception>
+        /// <exception cref="PathTooLongException">
+        /// The specified <paramref name="file"/> path exceeds the system-defined maximum length.
+        /// For example, on Windows-based platforms, paths must be less than 248 characters,
+        /// and file names must be less than 260 characters.
+        /// </exception>
         public static void Serialize(string file, object obj)
         {
             Serialize(File.Open(file, FileMode.Create), obj);
