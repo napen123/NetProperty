@@ -1,8 +1,11 @@
-﻿namespace NetProperty.Serialization
+﻿using System;
+
+namespace NetProperty.Serialization
 {
     /// <summary>
     /// Used to convert field and property values into a custom format when serializing and deserializing.
     /// </summary>
+    [Obsolete]
     public abstract class PropertyConverter
     {
         /// <summary>

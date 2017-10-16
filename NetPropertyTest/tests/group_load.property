@@ -1,0 +1,10 @@
+stray_global = Whoops!
+
+[Test Group 1]
+message = Hello, World!
+
+[Test Group 2]
+message = Goodbye, World!
+
+[]
+another_global = Yay!

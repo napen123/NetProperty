@@ -6,6 +6,7 @@ namespace NetProperty.Serialization
     /// Used to provide additional information when serializing a field/property,
     /// or when deserializing a property into a field/property.
     /// </summary>
+    [Obsolete]
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class PropertyAttribute : Attribute
     {
@@ -15,10 +16,9 @@ namespace NetProperty.Serialization
         public PropertyConverter Converter;
 
         /// <summary>
-        /// The name the property has when serialized and deserialized.
-        /// Cannot be null.
+        /// The property's name when serialized and deserialized.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; }
 
         /// <summary>
         /// Initializes a new instance of PropertyAttribute with a provided <paramref name="name"/> and

@@ -1,12 +1,10 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-
+﻿/*
 namespace NetProperty.Serialization
 {
     /// <summary>
     /// Serializes and deserializes objects to and from property files.
     /// </summary>
+    [Obsolete]
     public static class PropertySerializer
     {
         /// <summary>
@@ -171,3 +169,4 @@ namespace NetProperty.Serialization
         }
     }
 }
+*/
