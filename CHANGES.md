@@ -1,9 +1,12 @@
 # 2.0.0
-* More error checking in PropertyAttribute(string, Type).
-* Add PropertyAttribute(Type). (This will use the name of field/property when serializing and deserializing).
-* Add AttributeUsage to PropertyAttribute (fields and properties only).
-* Add property converters (NetProperty.Serialization.PropertyConverter) for serialization and deserialization.
-* Ability to deserialize into a provided type.
+* Add property groups alongside global properties.
+* Add PropertyGroupException, which gets thrown when a property group is incorrectly declared (i.e. missing closing brace).
+* Make some changed to and deprecate serialization stuff (for now).
+	* More error checking in PropertyAttribute(string, Type).
+	* Add PropertyAttribute(Type). (This will use the name of field/property when serializing and deserializing).
+	* Add AttributeUsage to PropertyAttribute (fields and properties only).
+	* Add property converters (NetProperty.Serialization.PropertyConverter) for serialization and deserialization.
+	* Ability to deserialize into a provided type.
 * Some documentation updates.
 * Minor fixes.
 
