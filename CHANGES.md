@@ -1,7 +1,6 @@
 # 2.0.0
-* Add property groups alongside global properties.
-* Add PropertyGroupException, which gets thrown when a property group is incorrectly declared (i.e. missing closing brace).
-* Make some changed to and deprecate serialization stuff (for now).
+* Add PropertyFile(int capacity).
+* Make some minor changes to and deprecate serialization stuff (for now).
 	* More error checking in PropertyAttribute(string, Type).
 	* Add PropertyAttribute(Type). (This will use the name of field/property when serializing and deserializing).
 	* Add AttributeUsage to PropertyAttribute (fields and properties only).
