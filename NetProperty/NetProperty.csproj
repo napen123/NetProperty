@@ -35,7 +35,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InvalidPropertyException.cs" />
-    <Compile Include="PropertyGroupException.cs" />
     <Compile Include="Serialization\PropertyAttribute.cs" />
     <Compile Include="PropertyFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -3,7 +3,7 @@
 NetProperty is a .NET library for reading and writing property files.
 
 ## Documentation
-The NetProperty source is documentated with xml comments.
+The NetProperty source is documentated with xml-comments.
 
 The wiki also provides both documentation and examples.
 
