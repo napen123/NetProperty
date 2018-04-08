@@ -92,5 +92,20 @@ namespace NetPropertyTest
         {
             Assert.Throws<InvalidPropertyException>(() => new PropertyFile("tests/error.property"));
         }
+
+        [Test]
+        public void NullValueTest()
+        {
+            const string file = "tests/null.property";
+
+            new PropertyFile(new Dictionary<string, string>(1)
+            {
+                ["my property"] = null
+            }).Save(file);
+
+            var nullProperty = new PropertyFile(file);
+
+            Assert.AreEqual(string.Empty, nullProperty["my property"]);
+        }
     }
 }
