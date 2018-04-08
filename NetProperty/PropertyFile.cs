@@ -25,7 +25,17 @@ namespace NetProperty
         }
 
         /// <summary>
-        /// Initializes a new instance of PropertyFile by loading properties from a <paramref name="file"/>.
+        /// Initializes a new instance of PropertyFile with an initial starting <paramref name="capacity"/>.
+        /// </summary>
+        /// <param name="capacity">The properties to initialize with.</param>
+        /// <see cref="Dictionary{TKey,TValue}(int)"/>
+        public PropertyFile(int capacity)
+        {
+            Properties = new Dictionary<string, string>(capacity);
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of PropertyFile by loading properties from a <paramref name="file" />.
         /// </summary>
         /// <param name="file">The file to load from.</param>
         public PropertyFile(string file)
@@ -45,16 +55,6 @@ namespace NetProperty
         }
 
         /// <summary>
-        /// Initializes a new instance of PropertyFile with an initial starting capacity.
-        /// </summary>
-        /// <see cref="Dictionary{TKey,TValue}(int)"/>
-        /// <param name="capacity">The properties to initialize with.</param>
-        public PropertyFile(int capacity)
-        {
-            Properties = new Dictionary<string, string>(capacity);
-        }
-
-        /// <summary>
         /// Initializes a new instance of PropertyFile with given <paramref name="properties"/>.
         /// </summary>
         /// <param name="properties">The properties to initialize with.</param>
@@ -68,32 +68,32 @@ namespace NetProperty
         /// </summary>
         /// <param name="name">The name of the property.</param>
         /// <param name="value">The property's value.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="name" /> is null.</exception>
-        public void SetProperty(string name, string value)
+        /// <returns>If <paramref name="name"/> is null, returns false; otherwise, returns true.</returns>
+        public bool SetProperty(string name, string value)
         {
             if (name == null)
-                throw new ArgumentNullException();
+                return false;
 
             Properties[name] = value;
+
+            return true;
         }
 
         /// <summary>
-        /// Get a property's value. If the property doesn't exist, return null.
+        /// Get a property's value.
         /// </summary>
         /// <param name="name">The property's name.</param>
-        /// <returns>If a property has the given <paramref name="name"/>, return its value; otherwise, return null.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="name" /> is null.</exception>
+        /// <returns>If <paramref name="name"/> is null or the property doesn't exist, returns null; otherwise, returns the value of the property.</returns>
         public string GetProperty(string name)
         {
-            if (name == null)
-                throw new ArgumentNullException();
-            
-            return (from property in Properties where property.Key == name select property.Value).FirstOrDefault();
+            return name == null
+                ? null
+                : (from property in Properties where property.Key == name select property.Value).FirstOrDefault();
         }
 
         /// <summary>
-        /// Load a property <paramref name="file"/>. If <paramref name="clearExisting"/> is <c>true</c>,
-        /// remove all existing properties; if <c>false</c>, append to the properties.
+        /// Load a property <paramref name="file"/>. If <paramref name="clearExisting"/> is true,
+        /// remove all existing properties; if false, keep the existing properties.
         /// </summary>
         /// <remarks>
         /// Properties can have their values overriden if redefined in the <paramref name="file"/>.
@@ -108,8 +108,8 @@ namespace NetProperty
         }
 
         /// <summary>
-        /// Load a property file from a <paramref name="stream"/>. If <paramref name="clearExisting"/> is <c>true</c>,
-        /// remove all existing properties; if <c>false</c>, append to the existing properties.
+        /// Load a property file from a <paramref name="stream"/>. If <paramref name="clearExisting"/> is true,
+        /// remove all existing properties; if false, keep the existing properties.
         /// </summary>
         /// <remarks>
         /// Properties can have their values overriden if redefined in the <paramref name="stream"/>.
@@ -124,8 +124,8 @@ namespace NetProperty
         }
 
         /// <summary>
-        /// Load a property <paramref name="file"/> in the specified <paramref name="encoding"/>. If <paramref name="clearExisting"/> is <c>true</c>,
-        /// remove all existing properties; if <c>false</c>, append to the existing properties.
+        /// Load properties from a <paramref name="file"/> using the specified <paramref name="encoding"/>. If <paramref name="clearExisting"/> is true,
+        /// remove all existing properties; if false, keep the existing properties.
         /// </summary>
         /// <remarks>
         /// Properties can have their values overriden if redefined in the <paramref name="file"/>.
@@ -133,30 +133,24 @@ namespace NetProperty
         /// <param name="file">The property file to load.</param>
         /// <param name="encoding">The encoding to use when reading the <paramref name="file"/>.</param>
         /// <param name="clearExisting">Remove existing properties before loading.</param>
-        /// <exception cref="ArgumentException"><paramref name="file" /> is a zero-length string, contains only white space, or contains one or more invalid characters as defined by <see cref="Path.GetInvalidFileNameChars" />.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="file" /> is null. </exception>
-        /// <exception cref="PathTooLongException">
-        /// The specified <seealso cref="file"/> path exceeds the system-defined maximum length.
-        /// For example, on Windows-based platforms, paths must be less than 248 characters,
-        /// and file names must be less than 260 characters.
-        /// </exception>
         public void Load(string file, Encoding encoding, bool clearExisting = true)
         {
             Load(File.Open(file, FileMode.Open), encoding, clearExisting);
         }
 
         /// <summary>
-        /// Load a property file from a <paramref name="stream"/> in the specified <paramref name="encoding"/>. If <paramref name="clearExisting"/> is <c>true</c>,
-        /// remove all existing properties; if <c>false</c>, append to the existing properties.
+        /// Load properties from a <paramref name="stream"/> using the specified <paramref name="encoding"/>. If <paramref name="clearExisting"/> is true,
+        /// remove all existing properties; if false, keep the existing properties.
         /// </summary>
         /// <remarks>
         /// Properties can have their values overriden if redefined in the <paramref name="stream"/>.
+        /// <br/>
+        /// <see cref="Properties"/> will be initialized if it's null.
         /// </remarks>
         /// <param name="stream">The stream to read from.</param>
         /// <param name="encoding">The encoding to use when opening the file.</param>
         /// <param name="clearExisting">Remove existing properties before loading.</param>
-        /// <exception cref="IOException" />
-        /// <exception cref="InvalidPropertyException">Thrown when a property is declared incorrectly.</exception>
+        /// <exception cref="InvalidPropertyException">Thrown if a property is declared incorrectly (i.e. missing either a "=" or "~").</exception>
         public void Load(Stream stream, Encoding encoding, bool clearExisting = true)
         {
             if(Properties == null)
@@ -220,59 +214,49 @@ namespace NetProperty
         }
 
         /// <summary>
-        /// Save <see cref="Properties"/> to a given <paramref name="file"/>, in a given <paramref name="encoding"/>.
+        /// Save <see cref="Properties"/> to a given <paramref name="file"/> using a specified <paramref name="encoding"/>.
         /// </summary>
         /// <param name="file">The file to save to.</param>
-        /// <param name="encoding">The encoding to save as.</param>
-        /// <exception cref="IOException" />
-        /// <exception cref="ArgumentException"><paramref name="file" /> is a zero-length string, contains only white space, or contains one or more invalid characters as defined by <see cref="Path.GetInvalidFileNameChars" />. </exception>
-        /// <exception cref="ArgumentNullException"><paramref name="file" /> is null. </exception>
-        /// <exception cref="PathTooLongException">
-        /// The specified <paramref name="file"/> path exceeds the system-defined maximum length.
-        /// For example, on Windows-based platforms, paths must be less than 248 characters,
-        /// and file names must be less than 260 characters.
-        /// </exception>
+        /// <param name="encoding">The encoding to save the <paramref name="file"/> as.</param>
         public void Save(string file, Encoding encoding)
         {
             Save(File.Open(file, FileMode.Create), encoding);
         }
 
         /// <summary>
-        /// Save <see cref="Properties"/> to a given <paramref name="stream"/>, in a given <paramref name="encoding"/>.
+        /// Save <see cref="Properties"/> to a given <paramref name="stream"/> using a specified <paramref name="encoding"/>.
         /// </summary>
         /// <param name="stream">The stream to save to.</param>
-        /// <param name="encoding">The encoding to save as.</param>
-        /// <exception cref="IOException" />
-        /// <exception cref="ArgumentException"><paramref name="stream" /> is not writable. </exception>
-        /// <exception cref="ArgumentNullException"><paramref name="stream" /> or <paramref name="encoding" /> is null. </exception>
+        /// <param name="encoding">The encoding to save the <paramref name="stream"/> as.</param>
         public void Save(Stream stream, Encoding encoding)
         {
             using (var writer = new StreamWriter(stream, encoding))
             {
-                void WriteProperties(Dictionary<string, string> properties)
+                if (Properties == null || Properties.Count == 0)
+                    return;
+
+                foreach (var property in Properties)
                 {
-                    foreach (var property in properties)
-                    {
-                        var value = property.Value;
-                    
-                        if (!string.IsNullOrEmpty(value) && char.IsWhiteSpace(value[0]))
-                            writer.WriteLine(property.Key + " ~" + value);
-                        else
-                            writer.WriteLine(property.Key + " = " + value);
-                    }
+                    var value = property.Value ?? "";
+
+                    if (value.Length == 0 || char.IsWhiteSpace(value[0]))
+                        writer.WriteLine(property.Key + " ~" + value);
+                    else
+                        writer.WriteLine(property.Key + " = " + value);
                 }
-                
-                if (Properties != null && Properties.Count > 0)
-                    WriteProperties(Properties);
             }
         }
 
         /// <summary>
-        /// Get or set a property's value.
+        /// Gets or sets a property's value.
         /// </summary>
+        /// <remarks>
+        /// When setting, if there's a possibility of <paramref name="name"/> being null,
+        /// it would be better to use <see cref="SetProperty"/> because it will return false in that case;
+        /// this error-case can then be handled better.
+        /// </remarks>
         /// <param name="name">The property's name.</param>
-        /// <returns>Returns the property's value; if the property doesn't exist, returns null.</returns>
-        /// <exception cref="ArgumentNullException" accessor="set"><paramref name="name" /> is null.</exception>
+        /// <returns>Returns the property's value; if the property doesn't exist or <paramref name="name"/> is null, returns null.</returns>
         public string this[string name]
         {
             get => GetProperty(name);

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("NetProperty")]
-[assembly: AssemblyCopyright("Copyright © 2016-2017, Ethan Dagner.")]
+[assembly: AssemblyCopyright("Copyright © 2016-2018, Ethan Dagner.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
