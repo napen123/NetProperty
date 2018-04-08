@@ -33,25 +33,61 @@ namespace NetProperty
         {
             Properties = new Dictionary<string, string>(capacity);
         }
-        
+
         /// <summary>
         /// Initializes a new instance of PropertyFile by loading properties from a <paramref name="file" />.
         /// </summary>
+        /// <remarks>
+        /// The <paramref name="file"/> will be loaded as UTF-8.
+        /// Use <see cref="PropertyFile(string,Encoding,bool)"/> to specify another.
+        /// </remarks>
         /// <param name="file">The file to load from.</param>
-        public PropertyFile(string file)
+        /// <param name="treatEmptyAsNull">If true, empty values will be added as null when loading.</param>
+        public PropertyFile(string file, bool treatEmptyAsNull = false)
             : this()
         {
-            Load(file);
+            Load(file, Encoding.UTF8, false, treatEmptyAsNull);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of PropertyFile by loading properties from a <paramref name="file" />
+        /// using a specified <paramref name="encoding"/>.
+        /// </summary>
+        /// <param name="file">The file to load from.</param>
+        /// <param name="encoding">The encoding to use when reading the <paramref name="file"/>.</param>
+        /// <param name="treatEmptyAsNull">If true, empty values will be added as null when loading.</param>
+        public PropertyFile(string file, Encoding encoding, bool treatEmptyAsNull = false)
+            : this()
+        {
+            Load(file, encoding, false, treatEmptyAsNull);
         }
 
         /// <summary>
         /// Initializes a new instance of PropertyFile by loading from a <paramref name="stream"/>.
         /// </summary>
+        /// <remarks>
+        /// The <paramref name="stream"/> will be loaded as UTF-8.
+        /// Use <see cref="PropertyFile(Stream,Encoding,bool)"/> to specify another.
+        /// </remarks>
         /// <param name="stream">The stream to load from.</param>
-        public PropertyFile(Stream stream)
+        /// <param name="treatEmptyAsNull">If true, empty values will be added as null when loading.</param>
+        public PropertyFile(Stream stream, bool treatEmptyAsNull = false)
             : this()
         {
-            Load(stream);
+            Load(stream, Encoding.UTF8, false, treatEmptyAsNull);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of PropertyFile by loading from a <paramref name="stream"/>
+        /// using a specified <paramref name="encoding"/>.
+        /// </summary>
+        /// <param name="stream">The stream to load from.</param>
+        /// <param name="encoding">The encoding to use when reading the <paramref name="stream"/>.</param>
+        /// <param name="treatEmptyAsNull">If true, empty values will be added as null when loading.</param>
+        public PropertyFile(Stream stream, Encoding encoding, bool treatEmptyAsNull = false)
+            : this()
+        {
+            Load(stream, encoding, false, treatEmptyAsNull);
         }
 
         /// <summary>
@@ -98,13 +134,14 @@ namespace NetProperty
         /// <remarks>
         /// Properties can have their values overriden if redefined in the <paramref name="file"/>.
         /// <br />
-        /// The <paramref name="file"/> will be opened as UTF-8; use <see cref="Load(string,Encoding,bool)"/> for alternate encodings.
+        /// The <paramref name="file"/> will be opened as UTF-8; use <see cref="Load(string,Encoding,bool,bool)"/> for alternate encodings.
         /// </remarks>
         /// <param name="file">The property file to load.</param>
         /// <param name="clearExisting">Remove existing properties before loading.</param>
-        public void Load(string file, bool clearExisting = true)
+        /// <param name="treatEmptyAsNull">If true, empty values will be added as null.</param>
+        public void Load(string file, bool clearExisting = true, bool treatEmptyAsNull = false)
         {
-            Load(file, Encoding.UTF8, clearExisting);
+            Load(file, Encoding.UTF8, clearExisting, treatEmptyAsNull);
         }
 
         /// <summary>
@@ -114,13 +151,14 @@ namespace NetProperty
         /// <remarks>
         /// Properties can have their values overriden if redefined in the <paramref name="stream"/>.
         /// <br />
-        /// The <paramref name="stream"/> will be opened as UTF-8; use <see cref="Load(Stream,Encoding,bool)"/> for alternate encodings.
+        /// The <paramref name="stream"/> will be opened as UTF-8; use <see cref="Load(Stream,Encoding,bool,bool)"/> for alternate encodings.
         /// </remarks>
         /// <param name="stream">The stream to read from.</param>
         /// <param name="clearExisting">Remove existing properties before loading.</param>
-        public void Load(Stream stream, bool clearExisting = true)
+        /// <param name="treatEmptyAsNull">If true, empty values will be added as null.</param>
+        public void Load(Stream stream, bool clearExisting = true, bool treatEmptyAsNull = false)
         {
-            Load(stream, Encoding.UTF8, clearExisting);
+            Load(stream, Encoding.UTF8, clearExisting, treatEmptyAsNull);
         }
 
         /// <summary>
@@ -133,9 +171,10 @@ namespace NetProperty
         /// <param name="file">The property file to load.</param>
         /// <param name="encoding">The encoding to use when reading the <paramref name="file"/>.</param>
         /// <param name="clearExisting">Remove existing properties before loading.</param>
-        public void Load(string file, Encoding encoding, bool clearExisting = true)
+        /// <param name="treatEmptyAsNull">If true, empty values will be added as null.</param>
+        public void Load(string file, Encoding encoding, bool clearExisting = true, bool treatEmptyAsNull = false)
         {
-            Load(File.Open(file, FileMode.Open), encoding, clearExisting);
+            Load(File.Open(file, FileMode.Open), encoding, clearExisting, treatEmptyAsNull);
         }
 
         /// <summary>
@@ -150,8 +189,9 @@ namespace NetProperty
         /// <param name="stream">The stream to read from.</param>
         /// <param name="encoding">The encoding to use when opening the file.</param>
         /// <param name="clearExisting">Remove existing properties before loading.</param>
+        /// <param name="treatEmptyAsNull">If true, empty values will be added as null.</param>
         /// <exception cref="InvalidPropertyException">Thrown if a property is declared incorrectly (i.e. missing either a "=" or "~").</exception>
-        public void Load(Stream stream, Encoding encoding, bool clearExisting = true)
+        public void Load(Stream stream, Encoding encoding, bool clearExisting = true, bool treatEmptyAsNull = false)
         {
             if(Properties == null)
                 Properties = new Dictionary<string, string>();
@@ -174,14 +214,14 @@ namespace NetProperty
                         var name = trimmed.Substring(0, trimmed.IndexOf('=')).TrimEnd();
                         var value = trimmed.Substring(trimmed.IndexOf('=') + 1).TrimStart();
 
-                        Properties[name] = value;
+                        Properties[name] = treatEmptyAsNull && value.Length == 0 ? null : value;
                     }
                     else if (trimmed.Contains("~"))
                     {
                         var name = trimmed.Substring(0, trimmed.IndexOf("~", StringComparison.Ordinal)).TrimEnd();
                         var value = trimmed.Substring(trimmed.IndexOf("~", StringComparison.Ordinal) + 1);
 
-                        Properties[name] = value;
+                        Properties[name] = treatEmptyAsNull && value.Length == 0 ? null : value;
                     }
                     else
                         throw new InvalidPropertyException("Expected either \'=\' or \'~\' : " + line);

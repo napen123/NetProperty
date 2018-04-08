@@ -103,9 +103,19 @@ namespace NetPropertyTest
                 ["my property"] = null
             }).Save(file);
 
-            var nullProperty = new PropertyFile(file);
+            // Treat empty values as null.
+            {
+                var treatNullProperty = new PropertyFile(file, true);
 
-            Assert.AreEqual(string.Empty, nullProperty["my property"]);
+                Assert.AreEqual(null, treatNullProperty["my property"]);
+            }
+
+            // _Don't_ treat empty values as null.
+            {
+                var treatNullProperty = new PropertyFile(file, false);
+
+                Assert.AreEqual(string.Empty, treatNullProperty["my property"]);
+            }
         }
     }
 }
