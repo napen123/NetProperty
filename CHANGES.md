@@ -1,12 +1,20 @@
 # 2.0.0
-* Add PropertyFile(int capacity).
+* Add new constructors to PropertyFile:
+    * PropertyFile(int) to specify initial property capacity.
+	* Updated the file and stream constructors to add the ability to specify an encoding
+	  and whether or not to treat empty values as null.
 * Make some minor changes to and deprecate serialization stuff (for now).
 	* More error checking in PropertyAttribute(string, Type).
 	* Add PropertyAttribute(Type). (This will use the name of field/property when serializing and deserializing).
 	* Add AttributeUsage to PropertyAttribute (fields and properties only).
 	* Add property converters (NetProperty.Serialization.PropertyConverter) for serialization and deserialization.
 	* Ability to deserialize into a provided type.
-* Some documentation updates.
+* Make SetProperty and GetProperty return error-values instead of throwing exceptions.
+* Add the ability to treat empty values as null when loading from files and streams.
+* Saving properties with null values will result in them having an empty assignment.
+	- For example, if property "name" has null as its value, the property's output in a file would look like "name ~"
+* Fix memory leaks in Load(string, Encoding) and Save(string, Encoding).
+* Documentation updates.
 * Minor fixes.
 
 # 1.1.0

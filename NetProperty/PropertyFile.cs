@@ -174,7 +174,8 @@ namespace NetProperty
         /// <param name="treatEmptyAsNull">If true, empty values will be added as null.</param>
         public void Load(string file, Encoding encoding, bool clearExisting = true, bool treatEmptyAsNull = false)
         {
-            Load(File.Open(file, FileMode.Open), encoding, clearExisting, treatEmptyAsNull);
+            using (var stream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read))
+                Load(stream, encoding, clearExisting, treatEmptyAsNull);
         }
 
         /// <summary>
@@ -260,7 +261,8 @@ namespace NetProperty
         /// <param name="encoding">The encoding to save the <paramref name="file"/> as.</param>
         public void Save(string file, Encoding encoding)
         {
-            Save(File.Open(file, FileMode.Create), encoding);
+            using (var stream = File.Open(file, FileMode.Open, FileAccess.Write))
+                Save(stream, encoding);
         }
 
         /// <summary>
