@@ -112,7 +112,7 @@ namespace NetPropertyTest
 
             // _Don't_ treat empty values as null.
             {
-                var treatNullProperty = new PropertyFile(file, false);
+                var treatNullProperty = new PropertyFile(file);
 
                 Assert.AreEqual(string.Empty, treatNullProperty["my property"]);
             }

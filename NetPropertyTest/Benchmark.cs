@@ -3,31 +3,24 @@ using System.Diagnostics;
 
 namespace NetPropertyTest
 {
-    public class BenchmarkUtil
+    public class Benchmark
     {
-        public static double Benchmark(int iterations, Action action)
+        public static double Measure(Action action, int iterations, int warmup = 1000)
         {
-            var time = 0.0;
-            const int warmup = 5;
-
+            GC.Collect();
             GC.WaitForPendingFinalizers();
 
             for (var i = 0; i < warmup; i++)
                 action();
-
-            GC.Collect();
-
+            
             var watch = Stopwatch.StartNew();
 
             for (var i = 0; i < iterations; i++)
-            {
                 action();
-                time += (double) watch.ElapsedMilliseconds / iterations;
-            }
 
             watch.Stop();
 
-            return time;
+            return watch.Elapsed.TotalMilliseconds;
         }
     }
 }
