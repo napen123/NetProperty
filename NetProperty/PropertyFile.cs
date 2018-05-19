@@ -44,8 +44,9 @@ namespace NetProperty
         /// <param name="file">The file to load from.</param>
         /// <param name="treatEmptyAsNull">If true, empty values will be added as null when loading.</param>
         public PropertyFile(string file, bool treatEmptyAsNull = false)
-            : this()
         {
+            Properties = new Dictionary<string, string>();
+
             Load(file, Encoding.UTF8, false, treatEmptyAsNull);
         }
 
@@ -57,8 +58,9 @@ namespace NetProperty
         /// <param name="encoding">The encoding to use when reading the <paramref name="file"/>.</param>
         /// <param name="treatEmptyAsNull">If true, empty values will be added as null when loading.</param>
         public PropertyFile(string file, Encoding encoding, bool treatEmptyAsNull = false)
-            : this()
         {
+            Properties = new Dictionary<string, string>();
+
             Load(file, encoding, false, treatEmptyAsNull);
         }
 
@@ -72,8 +74,9 @@ namespace NetProperty
         /// <param name="stream">The stream to load from.</param>
         /// <param name="treatEmptyAsNull">If true, empty values will be added as null when loading.</param>
         public PropertyFile(Stream stream, bool treatEmptyAsNull = false)
-            : this()
         {
+            Properties = new Dictionary<string, string>();
+
             Load(stream, Encoding.UTF8, false, treatEmptyAsNull);
         }
 
@@ -85,8 +88,9 @@ namespace NetProperty
         /// <param name="encoding">The encoding to use when reading the <paramref name="stream"/>.</param>
         /// <param name="treatEmptyAsNull">If true, empty values will be added as null when loading.</param>
         public PropertyFile(Stream stream, Encoding encoding, bool treatEmptyAsNull = false)
-            : this()
         {
+            Properties = new Dictionary<string, string>();
+
             Load(stream, encoding, false, treatEmptyAsNull);
         }
 
