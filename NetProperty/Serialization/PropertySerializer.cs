@@ -1,4 +1,7 @@
-﻿/*
+﻿using System;
+using System.IO;
+using System.Reflection;
+
 namespace NetProperty.Serialization
 {
     /// <summary>
@@ -169,4 +172,3 @@ namespace NetProperty.Serialization
         }
     }
 }
-*/
