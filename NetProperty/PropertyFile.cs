@@ -51,6 +51,38 @@ namespace NetProperty
         }
 
         /// <summary>
+        /// Initializes a new instance of PropertyFile by loading as many properties from a <paramref name="file" /> as possible.
+        /// </summary>
+        /// <remarks>
+        /// The <paramref name="file"/> will be loaded as UTF-8.
+        /// Use <see cref="PropertyFile(string,Encoding,out bool,bool)"/> to specify another.
+        /// </remarks>
+        /// <param name="file">The file to load from.</param>
+        /// <param name="result">The result of the load: true if all properties were successfully loaded; false if some were incorrectly declared.</param>
+        /// <param name="treatEmptyAsNull">If true, empty values will be added as null when loading.</param>
+        public PropertyFile(string file, out bool result, bool treatEmptyAsNull = false)
+        {
+            Properties = new Dictionary<string, string>();
+
+            result = TryLoad(file, Encoding.UTF8, false, treatEmptyAsNull);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of PropertyFile by loading as many properties from a <paramref name="file" /> as possible,
+        /// using the provided <paramref name="encoding"/>.
+        /// </summary>
+        /// <param name="file">The file to load from.</param>
+        /// <param name="encoding">The encoding to use when reading the <paramref name="file"/>.</param>
+        /// <param name="result">The result of the load: true if all properties were successfully loaded; false if some were incorrectly declared.</param>
+        /// <param name="treatEmptyAsNull">If true, empty values will be added as null when loading.</param>
+        public PropertyFile(string file, Encoding encoding, out bool result, bool treatEmptyAsNull = false)
+        {
+            Properties = new Dictionary<string, string>();
+
+            result = TryLoad(file, encoding, false, treatEmptyAsNull);
+        }
+
+        /// <summary>
         /// Initializes a new instance of PropertyFile by loading properties from a <paramref name="file" />
         /// using a specified <paramref name="encoding"/>.
         /// </summary>
@@ -92,6 +124,38 @@ namespace NetProperty
             Properties = new Dictionary<string, string>();
 
             Load(stream, encoding, false, treatEmptyAsNull);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of PropertyFile by loading as many properties from a <paramref name="stream" /> as possible.
+        /// </summary>
+        /// <remarks>
+        /// The <paramref name="stream"/> will be loaded as UTF-8.
+        /// Use <see cref="PropertyFile(Stream,Encoding,out bool,bool)"/> to specify another.
+        /// </remarks>
+        /// <param name="stream">The stream to load from.</param>
+        /// <param name="result">The result of the load: true if all properties were successfully loaded; false if some were incorrectly declared.</param>
+        /// <param name="treatEmptyAsNull">If true, empty values will be added as null when loading.</param>
+        public PropertyFile(Stream stream, out bool result, bool treatEmptyAsNull = false)
+        {
+            Properties = new Dictionary<string, string>();
+
+            result = TryLoad(stream, Encoding.UTF8, false, treatEmptyAsNull);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of PropertyFile by loading as many properties from a <paramref name="stream" /> as possible,
+        /// using the provided <paramref name="encoding"/>.
+        /// </summary>
+        /// <param name="stream">The stream to load from.</param>
+        /// <param name="encoding">The encoding to use when reading the <paramref name="stream"/>.</param>
+        /// <param name="result">The result of the load: true if all properties were successfully loaded; false if some were incorrectly declared.</param>
+        /// <param name="treatEmptyAsNull">If true, empty values will be added as null when loading.</param>
+        public PropertyFile(Stream stream, Encoding encoding, out bool result, bool treatEmptyAsNull = false)
+        {
+            Properties = new Dictionary<string, string>();
+
+            result = TryLoad(stream, encoding, false, treatEmptyAsNull);
         }
 
         /// <summary>
@@ -232,6 +296,117 @@ namespace NetProperty
                         throw new InvalidPropertyException("Expected either \'=\' or \'~\' : " + line);
                 }
             }
+        }
+
+        /// <summary>
+        /// Try to load as many properties from a <paramref name="file"/> as possible.
+        /// If <paramref name="clearExisting"/> is true, remove all existing properties; if false, keep the existing properties.
+        /// </summary>
+        /// <remarks>
+        /// Properties can have their values overriden if redefined in the <paramref name="file"/>.
+        /// <br />
+        /// The <paramref name="file"/> will be opened as UTF-8; use <see cref="Load(string,Encoding,bool,bool)"/> for alternate encodings.
+        /// </remarks>
+        /// <param name="file">The property file to load.</param>
+        /// <param name="clearExisting">Remove existing properties before loading.</param>
+        /// <param name="treatEmptyAsNull">If true, empty values will be added as null.</param>
+        /// <returns>True if all properties were successfully loaded; false if some were unable to be loaded (i.e. invalid syntax).</returns>
+        public bool TryLoad(string file, bool clearExisting = true, bool treatEmptyAsNull = false)
+        {
+            return TryLoad(file, Encoding.UTF8, clearExisting, treatEmptyAsNull);
+        }
+
+        /// <summary>
+        /// Try to load as many properties from a <paramref name="stream"/> as possible.
+        /// If <paramref name="clearExisting"/> is true, remove all existing properties; if false, keep the existing properties.
+        /// </summary>
+        /// <remarks>
+        /// Properties can have their values overriden if redefined in the <paramref name="stream"/>.
+        /// <br />
+        /// The <paramref name="stream"/> will be opened as UTF-8; use <see cref="Load(Stream,Encoding,bool,bool)"/> for alternate encodings.
+        /// </remarks>
+        /// <param name="stream">The stream to read from.</param>
+        /// <param name="clearExisting">Remove existing properties before loading.</param>
+        /// <param name="treatEmptyAsNull">If true, empty values will be added as null.</param>
+        /// <returns>True if all properties were successfully loaded; false if some were unable to be loaded (i.e. invalid syntax).</returns>
+        public bool TryLoad(Stream stream, bool clearExisting = true, bool treatEmptyAsNull = false)
+        {
+            return TryLoad(stream, Encoding.UTF8, clearExisting, treatEmptyAsNull);
+        }
+
+        /// <summary>
+        /// Try to load as many properties from a <paramref name="file"/> using the specified <paramref name="encoding"/> as possible.
+        /// If <paramref name="clearExisting"/> is true, remove all existing properties; if false, keep the existing properties.
+        /// </summary>
+        /// <remarks>
+        /// Properties can have their values overriden if redefined in the <paramref name="file"/>.
+        /// </remarks>
+        /// <param name="file">The property file to load.</param>
+        /// <param name="encoding">The encoding to use when reading the <paramref name="file"/>.</param>
+        /// <param name="clearExisting">Remove existing properties before loading.</param>
+        /// <param name="treatEmptyAsNull">If true, empty values will be added as null.</param>
+        /// <returns>True if all properties were successfully loaded; false if some were unable to be loaded (i.e. invalid syntax).</returns>
+        public bool TryLoad(string file, Encoding encoding, bool clearExisting = true, bool treatEmptyAsNull = false)
+        {
+            using (var stream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read))
+                return TryLoad(stream, encoding, clearExisting, treatEmptyAsNull);
+        }
+
+        /// <summary>
+        /// Try to load as many properties from a <paramref name="stream"/> using the specified <paramref name="encoding"/> as possible.
+        /// If <paramref name="clearExisting"/> is true, remove all existing properties; if false, keep the existing properties.
+        /// </summary>
+        /// <remarks>
+        /// Properties can have their values overriden if redefined in the <paramref name="stream"/>.
+        /// <br/>
+        /// <see cref="Properties"/> will be initialized if it's null.
+        /// </remarks>
+        /// <param name="stream">The stream to read from.</param>
+        /// <param name="encoding">The encoding to use when opening the file.</param>
+        /// <param name="clearExisting">Remove existing properties before loading.</param>
+        /// <param name="treatEmptyAsNull">If true, empty values will be added as null.</param>
+        /// <exception cref="InvalidPropertyException">Thrown if a property is declared incorrectly (i.e. missing either a "=" or "~").</exception>
+        /// <returns>True if all properties were successfully loaded; false if some were unable to be loaded (i.e. invalid syntax).</returns>
+        public bool TryLoad(Stream stream, Encoding encoding, bool clearExisting = true, bool treatEmptyAsNull = false)
+        {
+            if (Properties == null)
+                Properties = new Dictionary<string, string>();
+            else if (clearExisting)
+                Properties.Clear();
+
+            var ret = true;
+
+            using (var reader = new StreamReader(stream, encoding))
+            {
+                string line;
+
+                while ((line = reader.ReadLine()) != null)
+                {
+                    var trimmed = line.TrimStart();
+
+                    if (trimmed.Length == 0 || trimmed.StartsWith("#", StringComparison.Ordinal))
+                        continue;
+
+                    if (trimmed.Contains("="))
+                    {
+                        var name = trimmed.Substring(0, trimmed.IndexOf('=')).TrimEnd();
+                        var value = trimmed.Substring(trimmed.IndexOf('=') + 1).TrimStart();
+
+                        Properties[name] = treatEmptyAsNull && value.Length == 0 ? null : value;
+                    }
+                    else if (trimmed.Contains("~"))
+                    {
+                        var name = trimmed.Substring(0, trimmed.IndexOf("~", StringComparison.Ordinal)).TrimEnd();
+                        var value = trimmed.Substring(trimmed.IndexOf("~", StringComparison.Ordinal) + 1);
+
+                        Properties[name] = treatEmptyAsNull && value.Length == 0 ? null : value;
+                    }
+                    else
+                        ret = false;
+                }
+            }
+
+            return ret;
         }
 
         /// <summary>
