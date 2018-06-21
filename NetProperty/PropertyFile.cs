@@ -265,7 +265,7 @@ namespace NetProperty
         /// <param name="encoding">The encoding to save the <paramref name="file"/> as.</param>
         public void Save(string file, Encoding encoding)
         {
-            using (var stream = File.Open(file, FileMode.Open, FileAccess.Write))
+            using (var stream = File.Open(file, FileMode.Create, FileAccess.Write))
                 Save(stream, encoding);
         }
 
