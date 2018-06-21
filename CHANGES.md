@@ -1,3 +1,5 @@
+# 2.1.0
+
 # 2.0.1
 * Add various different targets:
 	* .NET Framework 4.5 - 4.7.1
