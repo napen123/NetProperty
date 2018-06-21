@@ -1,4 +1,8 @@
 # 2.0.1
+* Add various different targets:
+	* .NET Framework 4.5 - 4.7.1
+	* .NET Core 2.0
+	* .NET Standard 2.0
 * Fixed a bug related to saving to a nonexistant file.
 
 # 2.0.0
