@@ -1,3 +1,6 @@
+# 2.0.1
+* Fixed a bug related to saving to a nonexistant file.
+
 # 2.0.0
 * Add new constructors to PropertyFile:
     * PropertyFile(int) to specify initial property capacity.
@@ -16,7 +19,6 @@
 * Fix memory leaks in Load(string, Encoding) and Save(string, Encoding).
 * Documentation updates.
 * Minor fixes.
-	* Fixed a bug related to saving to a nonexistant file.
 
 # 1.1.0
 * Basic serialization and deserialization (Serialization namespace).
