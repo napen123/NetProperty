@@ -117,5 +117,17 @@ namespace NetPropertyTest
                 Assert.AreEqual(string.Empty, treatNullProperty["my property"]);
             }
         }
+
+        [Test]
+        public void TryLoadTest()
+        {
+            const string tryTrue = "tests/try.true.property";
+            const string tryFalse = "tests/try.false.property";
+
+            var property = new PropertyFile();
+
+            Assert.IsTrue(property.TryLoad(tryTrue));
+            Assert.IsFalse(property.TryLoad(tryFalse));
+        }
     }
 }
