@@ -129,5 +129,16 @@ namespace NetPropertyTest
             Assert.IsTrue(property.TryLoad(tryTrue));
             Assert.IsFalse(property.TryLoad(tryFalse));
         }
+
+        [Test]
+        public void IterationTest()
+        {
+            const string file = "tests/iter.property";
+
+            var propertyFile = new PropertyFile(file);
+
+            foreach (var property in propertyFile)
+                Console.WriteLine($"{property.Key} : [{property.Value}]");
+        }
     }
 }
