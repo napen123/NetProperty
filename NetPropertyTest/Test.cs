@@ -39,12 +39,12 @@ namespace NetPropertyTest
         {
             const string file = "tests/saveload.property";
 
-            new PropertyFile(new Dictionary<string, string>(3)
+            new PropertyFile(3)
             {
                 ["property.first"] = "First Property",
                 ["property.second"] = "Second Property",
                 ["property.third"] = "Third Property"
-            }).Save(file);
+            }.Save(file);
 
             var stringProperty = new PropertyFile(file);
 
@@ -75,11 +75,11 @@ namespace NetPropertyTest
         {
             const string file = "tests/spacingsave.property";
 
-            new PropertyFile(new Dictionary<string, string>(2)
+            new PropertyFile(2)
             {
                 ["nospace"] = "No spaces",
                 ["space"] = "    Four spaces"
-            }).Save(file);
+            }.Save(file);
 
             var variedProperty = new PropertyFile(file);
 

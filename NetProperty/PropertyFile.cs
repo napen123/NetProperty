@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace NetProperty
@@ -8,13 +9,23 @@ namespace NetProperty
     /// <summary>
     /// Represents a property file.
     /// </summary>
-    public class PropertyFile
+    public class PropertyFile : ICollection<KeyValuePair<string, string>>
     {
         /// <summary>
         /// The file's properties.
         /// </summary>
         public Dictionary<string, string> Properties;
-        
+
+        /// <summary>
+        /// Gets the number of properties in this file.
+        /// </summary>
+        public int Count => Properties.Count;
+
+        /// <summary>
+        /// Whether or not this is a read-only collection; always returns false.
+        /// </summary>
+        public bool IsReadOnly => false;
+
         /// <summary>
         /// Initializes a new instance of PropertyFile with no properties.
         /// </summary>
@@ -165,7 +176,54 @@ namespace NetProperty
         {
             Properties = properties;
         }
+
+        /// <summary>
+        /// Add a property with a given value.
+        /// </summary>
+        /// <remarks>
+        /// If a property already exists with the given name,
+        /// that property is overridden with the provided value.
+        /// </remarks>
+        /// <param name="name">The name of the property to add.</param>
+        /// <param name="value">The value of the property to add.</param>
+        public void Add(string name, string value)
+        {
+            Properties.Add(name, value);
+        }
         
+        /// <summary>
+        /// Add a property with a given value.
+        /// </summary>
+        /// <remarks>
+        /// If a property already exists with the given name,
+        /// that property is overridden with the provided value.
+        /// </remarks>
+        /// <param name="pair">The name-value pair to add.</param>
+        public void Add(KeyValuePair<string, string> pair)
+        {
+            Properties.Add(pair.Key, pair.Value);
+        }
+
+        /// <summary>
+        /// Determine whether or not a property has the provided name.
+        /// </summary>
+        /// <param name="name">The name to check for.</param>
+        /// <returns>Returns true if a property has the given <paramref name="name"/>; false otherwise.</returns>
+        public bool Contains(string name)
+        {
+            return Properties.ContainsKey(name);
+        }
+
+        /// <summary>
+        /// Determine whether or not a property has the provided name and value.
+        /// </summary>
+        /// <param name="pair">The name-value pair to check for.</param>
+        /// <returns>Returns true if a property has the given name and value; false otherwise.</returns>
+        public bool Contains(KeyValuePair<string, string> pair)
+        {
+            return Properties.TryGetValue(pair.Key, out var value) && value == pair.Value;
+        }
+
         /// <summary>
         /// Set a property's value. If the property doesn't exist, create it.
         /// </summary>
@@ -193,6 +251,43 @@ namespace NetProperty
                 return null;
 
             return value;
+        }
+
+        /// <summary>
+        /// Remove a property if it has the provided name.
+        /// </summary>
+        /// <param name="name">The name to check for.</param>
+        /// <returns>Returns true if the property was removed; false otherwise.</returns>
+        public bool Remove(string name)
+        {
+            return Properties.Remove(name);
+        }
+
+        /// <summary>
+        /// Remove a property if it has the provided name and value.
+        /// </summary>
+        /// <param name="pair">The name-value pair to check for.</param>
+        /// <returns>Returns true if the property was removed; false otherwise.</returns>
+        public bool Remove(KeyValuePair<string, string> pair)
+        {
+            var name = pair.Key;
+
+            if (Properties.TryGetValue(name, out var value) && value == pair.Value)
+            {
+                Properties.Remove(name);
+                
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Clear the <see cref="Properties"/> in the file.
+        /// </summary>
+        public void Clear()
+        {
+            Properties.Clear();
         }
 
         /// <summary>
@@ -266,7 +361,7 @@ namespace NetProperty
                 Properties = new Dictionary<string, string>();
             else if(clearExisting)
                 Properties.Clear();
-            
+
             using (var reader = new StreamReader(stream, encoding))
             {
                 string line;
@@ -451,21 +546,63 @@ namespace NetProperty
         /// <param name="encoding">The encoding to save the <paramref name="stream"/> as.</param>
         public void Save(Stream stream, Encoding encoding)
         {
+            if (Properties == null || Properties.Count == 0)
+                return;
+            
             using (var writer = new StreamWriter(stream, encoding))
             {
-                if (Properties == null || Properties.Count == 0)
-                    return;
-
                 foreach (var property in Properties)
                 {
-                    var value = property.Value ?? "";
-
+                    var value = property.Value ?? string.Empty;
+                    
                     if (value.Length == 0 || char.IsWhiteSpace(value[0]))
                         writer.WriteLine(property.Key + " ~" + value);
                     else
                         writer.WriteLine(property.Key + " = " + value);
                 }
             }
+        }
+
+        /// <summary>
+        /// Copy <see cref="Properties"/> to an <paramref name="array"/>.
+        /// </summary>
+        /// <param name="array">The array to copy to.</param>
+        /// <param name="index">The index of the array to start copying at.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="array"/> is null.</exception>
+        /// <exception cref="ArgumentException">The length of <paramref name="array"/> is too small to fit all properties.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="index"/> is out of range;
+        /// it's larger than the length of <paramref name="array"/> or less than zero.
+        /// </exception>
+        public void CopyTo(KeyValuePair<string, string>[] array, int index)
+        {
+            if (array == null)
+                throw new ArgumentNullException(nameof(array));
+
+            var length = array.Length;
+
+            if (Properties.Count > length)
+                throw new ArgumentException(nameof(array));
+
+            if (index > length || index < 0)
+                throw new ArgumentOutOfRangeException(nameof(index));
+
+            foreach (var property in Properties)
+                array[index--] = property;
+        }
+
+        /// <summary>
+        /// Get an enumerator that iterates through the <see cref="Properties"/>.
+        /// </summary>
+        /// <returns>Returns an enumerator that iterates through the <see cref="Properties"/>.</returns>
+        public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
+        {
+            return Properties.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         /// <summary>
