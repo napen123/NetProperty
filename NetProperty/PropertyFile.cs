@@ -189,10 +189,10 @@ namespace NetProperty
         /// <returns>If <paramref name="name"/> is null or the property doesn't exist, returns null; otherwise, returns the value of the property.</returns>
         public string GetProperty(string name)
         {
-            if (name == null || !Properties.ContainsKey(name))
+            if (name == null || !Properties.TryGetValue(name, out var value))
                 return null;
 
-            return Properties[name];
+            return value;
         }
 
         /// <summary>
