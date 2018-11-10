@@ -287,8 +287,8 @@ namespace NetProperty
                     }
                     else if (trimmed.Contains("~"))
                     {
-                        var name = trimmed.Substring(0, trimmed.IndexOf("~", StringComparison.Ordinal)).TrimEnd();
-                        var value = trimmed.Substring(trimmed.IndexOf("~", StringComparison.Ordinal) + 1);
+                        var name = trimmed.Substring(0, trimmed.IndexOf('~')).TrimEnd();
+                        var value = trimmed.Substring(trimmed.IndexOf('~') + 1);
 
                         Properties[name] = treatEmptyAsNull && value.Length == 0 ? null : value;
                     }
