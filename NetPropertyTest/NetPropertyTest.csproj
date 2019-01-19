@@ -62,6 +62,9 @@
     <None Include="tests\comment.property">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="tests\copy.property">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="tests\error.property">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

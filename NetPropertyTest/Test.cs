@@ -86,6 +86,36 @@ namespace NetPropertyTest
             Assert.AreEqual("No spaces", variedProperty.GetProperty("nospace"));
             Assert.AreEqual("    Four spaces", variedProperty.GetProperty("space"));
         }
+
+        [Test]
+        public void EmptyTest()
+        {
+            const string file = "tests/empty.property";
+
+            new PropertyFile(1)
+            {
+                [""] = ""
+            }.Save(file);
+
+            var emptyProperty = new PropertyFile(file);
+
+            Assert.AreEqual("", emptyProperty.GetProperty(""));
+        }
+
+        [Test]
+        public void EmptyTest2()
+        {
+            const string file = "tests/empty2.property";
+
+            new PropertyFile(1)
+            {
+                [""] = "    "
+            }.Save(file);
+
+            var emptyProperty = new PropertyFile(file);
+
+            Assert.AreEqual("    ", emptyProperty.GetProperty(""));
+        }
         
         [Test]
         public void ErrorTest()
@@ -139,6 +169,63 @@ namespace NetPropertyTest
 
             foreach (var property in propertyFile)
                 Console.WriteLine($"{property.Key} : [{property.Value}]");
+        }
+
+        [Test]
+        public void CopyTest()
+        {
+            const string file = "tests/copy.property";
+
+            var copyProperty = new PropertyFile(file);
+
+            {
+                var copyArray = new KeyValuePair<string, string>[2];
+
+                copyProperty.CopyTo(copyArray, 0);
+
+                Assert.AreEqual("p1", copyArray[0].Key);
+                Assert.AreEqual("Property 1", copyArray[0].Value);
+
+                Assert.AreEqual("prop2", copyArray[1].Key);
+                Assert.AreEqual("    Property 2", copyArray[1].Value);
+            }
+
+            {
+                var copyArray = new KeyValuePair<string, string>[4];
+
+                copyProperty.CopyTo(copyArray, 2);
+
+                Assert.AreEqual("p1", copyArray[2].Key);
+                Assert.AreEqual("Property 1", copyArray[2].Value);
+
+                Assert.AreEqual("prop2", copyArray[3].Key);
+                Assert.AreEqual("    Property 2", copyArray[3].Value);
+            }
+        }
+
+        [Test]
+        public void CopyTest2()
+        {
+            const string file = "tests/copy.property";
+
+            new PropertyFile(1)
+            {
+                ["p1"] = "Property 1",
+                ["prop2"] = "    Property 2"
+            }.Save(file);
+
+            var copyProperty = new PropertyFile(file);
+
+            KeyValuePair<string, string>[] copyArray = null;
+            Assert.Throws<ArgumentNullException>(() => copyProperty.CopyTo(copyArray, 0));
+
+            copyArray = new KeyValuePair<string, string>[1];
+            Assert.Throws<ArgumentException>(() => copyProperty.CopyTo(copyArray, 0));
+
+            copyArray = new KeyValuePair<string, string>[4];
+            Assert.Throws<ArgumentOutOfRangeException>(() => copyProperty.CopyTo(copyArray, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => copyProperty.CopyTo(copyArray, 100));
+            Assert.Throws<ArgumentOutOfRangeException>(() => copyProperty.CopyTo(copyArray, 3));
         }
     }
 }

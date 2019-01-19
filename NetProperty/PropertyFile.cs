@@ -15,9 +15,9 @@ namespace NetProperty
         /// The file's properties.
         /// </summary>
         public Dictionary<string, string> Properties;
-
+        
         /// <summary>
-        /// Gets the number of properties in this file.
+        /// Gets the number of properties in the file.
         /// </summary>
         public int Count => Properties.Count;
 
@@ -37,139 +37,14 @@ namespace NetProperty
         /// <summary>
         /// Initializes a new instance of PropertyFile with an initial starting <paramref name="capacity"/>.
         /// </summary>
-        /// <param name="capacity">The properties to initialize with.</param>
-        /// <see cref="Dictionary{TKey,TValue}(int)"/>
+        /// <param name="capacity">The capacity to initialize with.</param>
         public PropertyFile(int capacity)
         {
             Properties = new Dictionary<string, string>(capacity);
         }
 
         /// <summary>
-        /// Initializes a new instance of PropertyFile by loading properties from a <paramref name="file" />.
-        /// </summary>
-        /// <remarks>
-        /// The <paramref name="file"/> will be loaded as UTF-8.
-        /// Use <see cref="PropertyFile(string,Encoding,bool)"/> to specify another.
-        /// </remarks>
-        /// <param name="file">The file to load from.</param>
-        /// <param name="treatEmptyAsNull">If true, empty values will be added as null when loading.</param>
-        public PropertyFile(string file, bool treatEmptyAsNull = false)
-        {
-            Properties = new Dictionary<string, string>();
-
-            Load(file, Encoding.UTF8, false, treatEmptyAsNull);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of PropertyFile by loading as many properties from a <paramref name="file" /> as possible.
-        /// </summary>
-        /// <remarks>
-        /// The <paramref name="file"/> will be loaded as UTF-8.
-        /// Use <see cref="PropertyFile(string,Encoding,out bool,bool)"/> to specify another.
-        /// </remarks>
-        /// <param name="file">The file to load from.</param>
-        /// <param name="result">The result of the load: true if all properties were successfully loaded; false if some were incorrectly declared.</param>
-        /// <param name="treatEmptyAsNull">If true, empty values will be added as null when loading.</param>
-        public PropertyFile(string file, out bool result, bool treatEmptyAsNull = false)
-        {
-            Properties = new Dictionary<string, string>();
-
-            result = TryLoad(file, Encoding.UTF8, false, treatEmptyAsNull);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of PropertyFile by loading as many properties from a <paramref name="file" /> as possible,
-        /// using the provided <paramref name="encoding"/>.
-        /// </summary>
-        /// <param name="file">The file to load from.</param>
-        /// <param name="encoding">The encoding to use when reading the <paramref name="file"/>.</param>
-        /// <param name="result">The result of the load: true if all properties were successfully loaded; false if some were incorrectly declared.</param>
-        /// <param name="treatEmptyAsNull">If true, empty values will be added as null when loading.</param>
-        public PropertyFile(string file, Encoding encoding, out bool result, bool treatEmptyAsNull = false)
-        {
-            Properties = new Dictionary<string, string>();
-
-            result = TryLoad(file, encoding, false, treatEmptyAsNull);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of PropertyFile by loading properties from a <paramref name="file" />
-        /// using a specified <paramref name="encoding"/>.
-        /// </summary>
-        /// <param name="file">The file to load from.</param>
-        /// <param name="encoding">The encoding to use when reading the <paramref name="file"/>.</param>
-        /// <param name="treatEmptyAsNull">If true, empty values will be added as null when loading.</param>
-        public PropertyFile(string file, Encoding encoding, bool treatEmptyAsNull = false)
-        {
-            Properties = new Dictionary<string, string>();
-
-            Load(file, encoding, false, treatEmptyAsNull);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of PropertyFile by loading from a <paramref name="stream"/>.
-        /// </summary>
-        /// <remarks>
-        /// The <paramref name="stream"/> will be loaded as UTF-8.
-        /// Use <see cref="PropertyFile(Stream,Encoding,bool)"/> to specify another.
-        /// </remarks>
-        /// <param name="stream">The stream to load from.</param>
-        /// <param name="treatEmptyAsNull">If true, empty values will be added as null when loading.</param>
-        public PropertyFile(Stream stream, bool treatEmptyAsNull = false)
-        {
-            Properties = new Dictionary<string, string>();
-
-            Load(stream, Encoding.UTF8, false, treatEmptyAsNull);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of PropertyFile by loading from a <paramref name="stream"/>
-        /// using a specified <paramref name="encoding"/>.
-        /// </summary>
-        /// <param name="stream">The stream to load from.</param>
-        /// <param name="encoding">The encoding to use when reading the <paramref name="stream"/>.</param>
-        /// <param name="treatEmptyAsNull">If true, empty values will be added as null when loading.</param>
-        public PropertyFile(Stream stream, Encoding encoding, bool treatEmptyAsNull = false)
-        {
-            Properties = new Dictionary<string, string>();
-
-            Load(stream, encoding, false, treatEmptyAsNull);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of PropertyFile by loading as many properties from a <paramref name="stream" /> as possible.
-        /// </summary>
-        /// <remarks>
-        /// The <paramref name="stream"/> will be loaded as UTF-8.
-        /// Use <see cref="PropertyFile(Stream,Encoding,out bool,bool)"/> to specify another.
-        /// </remarks>
-        /// <param name="stream">The stream to load from.</param>
-        /// <param name="result">The result of the load: true if all properties were successfully loaded; false if some were incorrectly declared.</param>
-        /// <param name="treatEmptyAsNull">If true, empty values will be added as null when loading.</param>
-        public PropertyFile(Stream stream, out bool result, bool treatEmptyAsNull = false)
-        {
-            Properties = new Dictionary<string, string>();
-
-            result = TryLoad(stream, Encoding.UTF8, false, treatEmptyAsNull);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of PropertyFile by loading as many properties from a <paramref name="stream" /> as possible,
-        /// using the provided <paramref name="encoding"/>.
-        /// </summary>
-        /// <param name="stream">The stream to load from.</param>
-        /// <param name="encoding">The encoding to use when reading the <paramref name="stream"/>.</param>
-        /// <param name="result">The result of the load: true if all properties were successfully loaded; false if some were incorrectly declared.</param>
-        /// <param name="treatEmptyAsNull">If true, empty values will be added as null when loading.</param>
-        public PropertyFile(Stream stream, Encoding encoding, out bool result, bool treatEmptyAsNull = false)
-        {
-            Properties = new Dictionary<string, string>();
-
-            result = TryLoad(stream, encoding, false, treatEmptyAsNull);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of PropertyFile with given <paramref name="properties"/>.
+        /// Initializes a new instance of PropertyFile with provided <paramref name="properties"/>.
         /// </summary>
         /// <param name="properties">The properties to initialize with.</param>
         public PropertyFile(Dictionary<string, string> properties)
@@ -178,58 +53,216 @@ namespace NetProperty
         }
 
         /// <summary>
-        /// Add a property with a given value.
+        /// Initializes a new instance of PropertyFile by loading from a <paramref name="file" />.
         /// </summary>
         /// <remarks>
-        /// If a property already exists with the given name,
-        /// that property is overridden with the provided value.
+        /// The <paramref name="file"/> will be loaded as UTF-8.
+        /// Use <see cref="PropertyFile(string,Encoding,bool)"/> to specify another.
+        /// </remarks>
+        /// <param name="file">The file to load from.</param>
+        /// <param name="treatEmptyAsNull">If true, empty and whitespace-only values will be added as null.</param>
+        public PropertyFile(string file, bool treatEmptyAsNull = false)
+        {
+            Properties = new Dictionary<string, string>();
+
+            Load(file, Encoding.UTF8, false, treatEmptyAsNull);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of PropertyFile by trying to load as many properties from a <paramref name="file" /> as possible.
+        /// </summary>
+        /// <remarks>
+        /// The <paramref name="file"/> will be loaded as UTF-8.
+        /// Use <see cref="PropertyFile(string,Encoding,out bool,bool)"/> to specify another.
+        /// </remarks>
+        /// <param name="file">The file to load from.</param>
+        /// <param name="result">True if all properties were successfully loaded; false if errors were encountered.</param>
+        /// <param name="treatEmptyAsNull">If true, empty and whitespace-only values will be added as null.</param>
+        public PropertyFile(string file, out bool result, bool treatEmptyAsNull = false)
+        {
+            Properties = new Dictionary<string, string>();
+
+            result = TryLoad(file, Encoding.UTF8, false, treatEmptyAsNull);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of PropertyFile by trying to load as many properties from a <paramref name="file" /> as possible,
+        /// using the provided <paramref name="encoding"/>.
+        /// </summary>
+        /// <param name="file">The file to load from.</param>
+        /// <param name="encoding">The encoding to use when reading the <paramref name="file"/>.</param>
+        /// <param name="result">True if all properties were successfully loaded; false if errors were encountered.</param>
+        /// <param name="treatEmptyAsNull">If true, empty and whitespace-only values will be added as null.</param>
+        public PropertyFile(string file, Encoding encoding, out bool result, bool treatEmptyAsNull = false)
+        {
+            Properties = new Dictionary<string, string>();
+
+            result = TryLoad(file, encoding, false, treatEmptyAsNull);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of PropertyFile by loading from a <paramref name="file" />
+        /// using the provided <paramref name="encoding"/>.
+        /// </summary>
+        /// <param name="file">The file to load from.</param>
+        /// <param name="encoding">The encoding to use when reading the <paramref name="file"/>.</param>
+        /// <param name="treatEmptyAsNull">If true, empty and whitespace-only values will be added as null.</param>
+        public PropertyFile(string file, Encoding encoding, bool treatEmptyAsNull = false)
+        {
+            Properties = new Dictionary<string, string>();
+
+            Load(file, encoding, false, treatEmptyAsNull);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of PropertyFile by loading from a <paramref name="stream" />.
+        /// </summary>
+        /// <remarks>
+        /// The <paramref name="stream"/> will be loaded as UTF-8.
+        /// Use <see cref="PropertyFile(Stream,Encoding,bool)"/> to specify another.
+        /// </remarks>
+        /// <param name="stream">The stream to load from.</param>
+        /// <param name="treatEmptyAsNull">If true, empty and whitespace-only values will be added as null.</param>
+        public PropertyFile(Stream stream, bool treatEmptyAsNull = false)
+        {
+            Properties = new Dictionary<string, string>();
+
+            Load(stream, Encoding.UTF8, false, treatEmptyAsNull);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of PropertyFile by loading from a <paramref name="stream" />
+        /// using the provided <paramref name="encoding"/>.
+        /// </summary>
+        /// <param name="stream">The stream to load from.</param>
+        /// <param name="encoding">The encoding to use when reading from the <paramref name="stream"/>.</param>
+        /// <param name="treatEmptyAsNull">If true, empty and whitespace-only values will be added as null.</param>
+        public PropertyFile(Stream stream, Encoding encoding, bool treatEmptyAsNull = false)
+        {
+            Properties = new Dictionary<string, string>();
+
+            Load(stream, encoding, false, treatEmptyAsNull);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of PropertyFile by trying to load as many properties from a <paramref name="stream" /> as possible.
+        /// </summary>
+        /// <remarks>
+        /// The <paramref name="stream"/> will be loaded as UTF-8.
+        /// Use <see cref="PropertyFile(Stream,Encoding,out bool,bool)"/> to specify another.
+        /// </remarks>
+        /// <param name="stream">The stream to load from.</param>
+        /// <param name="result">True if all properties were successfully loaded; false if errors were encountered.</param>
+        /// <param name="treatEmptyAsNull">If true, empty and whitespace-only values will be added as null.</param>
+        public PropertyFile(Stream stream, out bool result, bool treatEmptyAsNull = false)
+        {
+            Properties = new Dictionary<string, string>();
+
+            result = TryLoad(stream, Encoding.UTF8, false, treatEmptyAsNull);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of PropertyFile by trying to load as many properties from a <paramref name="stream" /> as possible,
+        /// using the provided <paramref name="encoding"/>.
+        /// </summary>
+        /// <param name="stream">The stream to load from.</param>
+        /// <param name="encoding">The encoding to use when reading the <paramref name="stream"/>.</param>
+        /// <param name="result">True if all properties were successfully loaded; false if errors were encountered.</param>
+        /// <param name="treatEmptyAsNull">If true, empty and whitespace-only values will be added as null.</param>
+        public PropertyFile(Stream stream, Encoding encoding, out bool result, bool treatEmptyAsNull = false)
+        {
+            Properties = new Dictionary<string, string>();
+
+            result = TryLoad(stream, encoding, false, treatEmptyAsNull);
+        }
+
+        /// <summary>
+        /// Adds a property with a given <paramref name="name"/> and <paramref name="value"/>.
+        /// </summary>
+        /// <remarks>
+        /// If a property already exists with the provided <paramref name="name"/>,
+        /// then it will be overridden instead.
+        ///
+        /// If <paramref name="name"/> is null, then this will return false.
         /// </remarks>
         /// <param name="name">The name of the property to add.</param>
         /// <param name="value">The value of the property to add.</param>
-        public void Add(string name, string value)
+        /// <returns>Returns true if the value was successfully added; false if not.</returns>
+        public bool Add(string name, string value)
         {
-            Properties.Add(name, value);
+            if (name == null)
+                return false;
+
+            Properties[name] = value;
+
+            return true;
         }
         
         /// <summary>
-        /// Add a property with a given value.
+        /// Adds a property using the provided name-value <paramref name="pair"/>.
         /// </summary>
         /// <remarks>
-        /// If a property already exists with the given name,
-        /// that property is overridden with the provided value.
+        /// If a property with the provided name already exists,
+        /// then it will be overridden instead.
         /// </remarks>
-        /// <param name="pair">The name-value pair to add.</param>
+        /// <param name="pair">The name-value pair to create a property from.</param>
+        /// <exception cref="ArgumentNullException">The provided property name is null.</exception>
         public void Add(KeyValuePair<string, string> pair)
         {
-            Properties.Add(pair.Key, pair.Value);
+            Properties[pair.Key] = pair.Value;
         }
 
         /// <summary>
-        /// Determine whether or not a property has the provided name.
+        /// Determines whether the PropertyFile contains a property with the specified <paramref name="name"/>.
         /// </summary>
+        /// <remarks>
+        /// If <paramref name="name"/> is null, then this will return false.
+        /// </remarks>
         /// <param name="name">The name to check for.</param>
-        /// <returns>Returns true if a property has the given <paramref name="name"/>; false otherwise.</returns>
+        /// <returns>Returns true if a property has the specified <paramref name="name"/>; false if not.</returns>
         public bool Contains(string name)
         {
-            return Properties.ContainsKey(name);
+            return name != null && Properties.ContainsKey(name);
         }
 
         /// <summary>
-        /// Determine whether or not a property has the provided name and value.
+        /// Determines whether or not a property has the provided <paramref name="name"/> and <paramref name="value"/>.
         /// </summary>
+        /// <remarks>
+        /// If <paramref name="name"/> is null, then this will return false.
+        /// </remarks>
+        /// <param name="name">The name to check for.</param>
+        /// <param name="value">The value to check for.</param>
+        /// <returns>Returns true if a property has the specified <paramref name="name"/> and <paramref name="value"/>; false if not.</returns>
+        public bool Contains(string name, string value)
+        {
+            return name != null && Properties.TryGetValue(name, out var v) && v == value;
+        }
+
+        /// <summary>
+        /// Determines whether or not a property has the provided name and value.
+        /// </summary>
+        /// <remarks>
+        /// If the specified name is null, then this will return false.
+        /// </remarks>
         /// <param name="pair">The name-value pair to check for.</param>
-        /// <returns>Returns true if a property has the given name and value; false otherwise.</returns>
+        /// <returns>Returns true if a property has the given name and value; false if not.</returns>
         public bool Contains(KeyValuePair<string, string> pair)
         {
-            return Properties.TryGetValue(pair.Key, out var value) && value == pair.Value;
+            var name = pair.Key;
+
+            return name != null && Properties.TryGetValue(name, out var value) && value == pair.Value;
         }
 
         /// <summary>
-        /// Set a property's value. If the property doesn't exist, create it.
+        /// Sets a property's value. If the property doesn't exist, then it will be created.
         /// </summary>
-        /// <param name="name">The name of the property.</param>
+        /// <remarks>
+        /// If <paramref name="name"/> is null, then this will return false.
+        /// </remarks>
+        /// <param name="name">The property's name.</param>
         /// <param name="value">The property's value.</param>
-        /// <returns>If <paramref name="name"/> is null, returns false; otherwise, returns true.</returns>
+        /// <returns>Returns true if the property's value was successfully set; false if not.</returns>
         public bool SetProperty(string name, string value)
         {
             if (name == null)
@@ -241,10 +274,10 @@ namespace NetProperty
         }
 
         /// <summary>
-        /// Get a property's value.
+        /// Gets a property's value based on its <paramref name="name"/>.
         /// </summary>
         /// <param name="name">The property's name.</param>
-        /// <returns>If <paramref name="name"/> is null or the property doesn't exist, returns null; otherwise, returns the value of the property.</returns>
+        /// <returns>Returns the property's value; null if it doesn't exist or <paramref name="name"/> was null.</returns>
         public string GetProperty(string name)
         {
             if (name == null || !Properties.TryGetValue(name, out var value))
@@ -254,36 +287,40 @@ namespace NetProperty
         }
 
         /// <summary>
-        /// Remove a property if it has the provided name.
+        /// Removes the property with the specified <paramref name="name"/>.
         /// </summary>
+        /// <remarks>
+        /// If <paramref name="name"/> is null, then this will return false.
+        /// </remarks>
         /// <param name="name">The name to check for.</param>
-        /// <returns>Returns true if the property was removed; false otherwise.</returns>
+        /// <returns>Returns true if the property was removed; false if not.</returns>
         public bool Remove(string name)
         {
-            return Properties.Remove(name);
+            return name != null && Properties.Remove(name);
         }
 
         /// <summary>
-        /// Remove a property if it has the provided name and value.
+        /// Removes the property that matches the provided name-value <paramref name="pair"/>.
         /// </summary>
+        /// <remarks>
+        /// If the given name is null, then this will return false.
+        /// </remarks>
         /// <param name="pair">The name-value pair to check for.</param>
-        /// <returns>Returns true if the property was removed; false otherwise.</returns>
+        /// <returns>Returns true if the property was removed; false if not.</returns>
         public bool Remove(KeyValuePair<string, string> pair)
         {
             var name = pair.Key;
+            
+            if (name == null || !Properties.TryGetValue(name, out var value) || value != pair.Value)
+                return false;
 
-            if (Properties.TryGetValue(name, out var value) && value == pair.Value)
-            {
-                Properties.Remove(name);
+            Properties.Remove(name);
                 
-                return true;
-            }
-
-            return false;
+            return true;
         }
 
         /// <summary>
-        /// Clear the <see cref="Properties"/> in the file.
+        /// Clears the file's <see cref="Properties"/>.
         /// </summary>
         public void Clear()
         {
@@ -291,50 +328,53 @@ namespace NetProperty
         }
 
         /// <summary>
-        /// Load a property <paramref name="file"/>. If <paramref name="clearExisting"/> is true,
-        /// remove all existing properties; if false, keep the existing properties.
+        /// Loads properties from a <paramref name="file"/>.
         /// </summary>
         /// <remarks>
-        /// Properties can have their values overriden if redefined in the <paramref name="file"/>.
+        /// Properties defined multiple times will have the last-defined value.
         /// <br />
-        /// The <paramref name="file"/> will be opened as UTF-8; use <see cref="Load(string,Encoding,bool,bool)"/> for alternate encodings.
+        /// <see cref="Properties"/> will be initialized if it's null.
+        /// <br />
+        /// The <paramref name="file"/> will be opened using UTF-8; use <see cref="Load(string,Encoding,bool,bool)"/> for alternate encodings.
         /// </remarks>
-        /// <param name="file">The property file to load.</param>
+        /// <param name="file">The file to load from.</param>
         /// <param name="clearExisting">Remove existing properties before loading.</param>
-        /// <param name="treatEmptyAsNull">If true, empty values will be added as null.</param>
+        /// <param name="treatEmptyAsNull">If true, empty and whitespace-only values will be added as null.</param>
         public void Load(string file, bool clearExisting = true, bool treatEmptyAsNull = false)
         {
             Load(file, Encoding.UTF8, clearExisting, treatEmptyAsNull);
         }
 
         /// <summary>
-        /// Load a property file from a <paramref name="stream"/>. If <paramref name="clearExisting"/> is true,
-        /// remove all existing properties; if false, keep the existing properties.
+        /// Loads properties from a <paramref name="stream"/>.
         /// </summary>
         /// <remarks>
-        /// Properties can have their values overriden if redefined in the <paramref name="stream"/>.
+        /// Properties defined multiple times will have the last-defined value.
         /// <br />
-        /// The <paramref name="stream"/> will be opened as UTF-8; use <see cref="Load(Stream,Encoding,bool,bool)"/> for alternate encodings.
+        /// <see cref="Properties"/> will be initialized if it's null.
+        /// <br />
+        /// The <paramref name="stream"/> will be opened using UTF-8; use <see cref="Load(Stream,Encoding,bool,bool)"/> for alternate encodings.
         /// </remarks>
-        /// <param name="stream">The stream to read from.</param>
+        /// <param name="stream">The stream to load from.</param>
         /// <param name="clearExisting">Remove existing properties before loading.</param>
-        /// <param name="treatEmptyAsNull">If true, empty values will be added as null.</param>
+        /// <param name="treatEmptyAsNull">If true, empty and whitespace-only values will be added as null.</param>
         public void Load(Stream stream, bool clearExisting = true, bool treatEmptyAsNull = false)
         {
             Load(stream, Encoding.UTF8, clearExisting, treatEmptyAsNull);
         }
 
         /// <summary>
-        /// Load properties from a <paramref name="file"/> using the specified <paramref name="encoding"/>. If <paramref name="clearExisting"/> is true,
-        /// remove all existing properties; if false, keep the existing properties.
+        /// Loads properties from a <paramref name="file"/> using the specified <paramref name="encoding"/>.
         /// </summary>
         /// <remarks>
-        /// Properties can have their values overriden if redefined in the <paramref name="file"/>.
+        /// Properties defined multiple times will have the last-defined value.
+        /// <br />
+        /// <see cref="Properties"/> will be initialized if it's null.
         /// </remarks>
-        /// <param name="file">The property file to load.</param>
-        /// <param name="encoding">The encoding to use when reading the <paramref name="file"/>.</param>
+        /// <param name="file">The file to load from.</param>
+        /// <param name="encoding">The encoding to use when reading from the <paramref name="file"/>.</param>
         /// <param name="clearExisting">Remove existing properties before loading.</param>
-        /// <param name="treatEmptyAsNull">If true, empty values will be added as null.</param>
+        /// <param name="treatEmptyAsNull">If true, empty and whitespace-only values will be added as null.</param>
         public void Load(string file, Encoding encoding, bool clearExisting = true, bool treatEmptyAsNull = false)
         {
             using (var stream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -342,24 +382,23 @@ namespace NetProperty
         }
 
         /// <summary>
-        /// Load properties from a <paramref name="stream"/> using the specified <paramref name="encoding"/>. If <paramref name="clearExisting"/> is true,
-        /// remove all existing properties; if false, keep the existing properties.
+        /// Loads properties from a <paramref name="stream"/> using the specified <paramref name="encoding"/>.
         /// </summary>
         /// <remarks>
-        /// Properties can have their values overriden if redefined in the <paramref name="stream"/>.
+        /// Properties defined multiple times will have the last-defined value.
         /// <br/>
         /// <see cref="Properties"/> will be initialized if it's null.
         /// </remarks>
-        /// <param name="stream">The stream to read from.</param>
-        /// <param name="encoding">The encoding to use when opening the file.</param>
+        /// <param name="stream">The stream to load from.</param>
+        /// <param name="encoding">The encoding to use when reading from the <paramref name="stream"/>.</param>
         /// <param name="clearExisting">Remove existing properties before loading.</param>
-        /// <param name="treatEmptyAsNull">If true, empty values will be added as null.</param>
+        /// <param name="treatEmptyAsNull">If true, empty and whitespace-only values will be added as null.</param>
         /// <exception cref="InvalidPropertyException">Thrown if a property is declared incorrectly (i.e. missing either a "=" or "~").</exception>
         public void Load(Stream stream, Encoding encoding, bool clearExisting = true, bool treatEmptyAsNull = false)
         {
-            if(Properties == null)
+            if (Properties == null)
                 Properties = new Dictionary<string, string>();
-            else if(clearExisting)
+            else if (clearExisting)
                 Properties.Clear();
 
             using (var reader = new StreamReader(stream, encoding))
@@ -388,59 +427,63 @@ namespace NetProperty
                         Properties[name] = treatEmptyAsNull && value.Length == 0 ? null : value;
                     }
                     else
-                        throw new InvalidPropertyException("Expected either \'=\' or \'~\' : " + line);
+                        throw new InvalidPropertyException("Expected either \'=\' or \'~\' in property declaration : " + line);
                 }
             }
         }
 
         /// <summary>
-        /// Try to load as many properties from a <paramref name="file"/> as possible.
-        /// If <paramref name="clearExisting"/> is true, remove all existing properties; if false, keep the existing properties.
+        /// Tries to load as many properties from a <paramref name="file"/> as possible.
         /// </summary>
         /// <remarks>
-        /// Properties can have their values overriden if redefined in the <paramref name="file"/>.
+        /// Properties defined multiple times will have the last-defined value.
+        /// <br/>
+        /// <see cref="Properties"/> will be initialized if it's null.
         /// <br />
-        /// The <paramref name="file"/> will be opened as UTF-8; use <see cref="Load(string,Encoding,bool,bool)"/> for alternate encodings.
+        /// The <paramref name="file"/> will be opened using UTF-8; use <see cref="TryLoad(string,Encoding,bool,bool)"/> for alternate encodings.
         /// </remarks>
-        /// <param name="file">The property file to load.</param>
+        /// <param name="file">The file to load from.</param>
         /// <param name="clearExisting">Remove existing properties before loading.</param>
-        /// <param name="treatEmptyAsNull">If true, empty values will be added as null.</param>
-        /// <returns>True if all properties were successfully loaded; false if some were unable to be loaded (i.e. invalid syntax).</returns>
+        /// <param name="treatEmptyAsNull">If true, empty and whitespace-only values will be added as null.</param>
+        /// <returns>Returns true if all properties were successfully loaded; false if errors were encountered.</returns>
         public bool TryLoad(string file, bool clearExisting = true, bool treatEmptyAsNull = false)
         {
             return TryLoad(file, Encoding.UTF8, clearExisting, treatEmptyAsNull);
         }
 
         /// <summary>
-        /// Try to load as many properties from a <paramref name="stream"/> as possible.
-        /// If <paramref name="clearExisting"/> is true, remove all existing properties; if false, keep the existing properties.
+        /// Tries to load as many properties from a <paramref name="stream"/> as possible.
         /// </summary>
         /// <remarks>
-        /// Properties can have their values overriden if redefined in the <paramref name="stream"/>.
+        /// Properties defined multiple times will have the last-defined value.
+        /// <br/>
+        /// <see cref="Properties"/> will be initialized if it's null.
         /// <br />
-        /// The <paramref name="stream"/> will be opened as UTF-8; use <see cref="Load(Stream,Encoding,bool,bool)"/> for alternate encodings.
+        /// The <paramref name="stream"/> will be opened using UTF-8; use <see cref="TryLoad(Stream,Encoding,bool,bool)"/> for alternate encodings.
         /// </remarks>
-        /// <param name="stream">The stream to read from.</param>
+        /// <param name="stream">The stream to load from.</param>
         /// <param name="clearExisting">Remove existing properties before loading.</param>
-        /// <param name="treatEmptyAsNull">If true, empty values will be added as null.</param>
-        /// <returns>True if all properties were successfully loaded; false if some were unable to be loaded (i.e. invalid syntax).</returns>
+        /// <param name="treatEmptyAsNull">If true, empty and whitespace-only values will be added as null.</param>
+        /// <returns>Returns true if all properties were successfully loaded; false if errors were encountered.</returns>
         public bool TryLoad(Stream stream, bool clearExisting = true, bool treatEmptyAsNull = false)
         {
             return TryLoad(stream, Encoding.UTF8, clearExisting, treatEmptyAsNull);
         }
 
         /// <summary>
-        /// Try to load as many properties from a <paramref name="file"/> using the specified <paramref name="encoding"/> as possible.
-        /// If <paramref name="clearExisting"/> is true, remove all existing properties; if false, keep the existing properties.
+        /// Tries to load as many properties from a <paramref name="file"/> as possible,
+        /// using the specified <paramref name="encoding"/>.
         /// </summary>
         /// <remarks>
-        /// Properties can have their values overriden if redefined in the <paramref name="file"/>.
+        /// Properties defined multiple times will have the last-defined value.
+        /// <br/>
+        /// <see cref="Properties"/> will be initialized if it's null.
         /// </remarks>
-        /// <param name="file">The property file to load.</param>
+        /// <param name="file">The file to load from.</param>
         /// <param name="encoding">The encoding to use when reading the <paramref name="file"/>.</param>
         /// <param name="clearExisting">Remove existing properties before loading.</param>
-        /// <param name="treatEmptyAsNull">If true, empty values will be added as null.</param>
-        /// <returns>True if all properties were successfully loaded; false if some were unable to be loaded (i.e. invalid syntax).</returns>
+        /// <param name="treatEmptyAsNull">If true, empty and whitespace-only values will be added as null.</param>
+        /// <returns>Returns true if all properties were successfully loaded; false if errors were encountered.</returns>
         public bool TryLoad(string file, Encoding encoding, bool clearExisting = true, bool treatEmptyAsNull = false)
         {
             using (var stream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -448,20 +491,19 @@ namespace NetProperty
         }
 
         /// <summary>
-        /// Try to load as many properties from a <paramref name="stream"/> using the specified <paramref name="encoding"/> as possible.
-        /// If <paramref name="clearExisting"/> is true, remove all existing properties; if false, keep the existing properties.
+        /// Tries to load as many properties from a <paramref name="stream"/> as possible,
+        /// using the specified <paramref name="encoding"/>.
         /// </summary>
         /// <remarks>
-        /// Properties can have their values overriden if redefined in the <paramref name="stream"/>.
+        /// Properties defined multiple times will have the last-defined value.
         /// <br/>
         /// <see cref="Properties"/> will be initialized if it's null.
         /// </remarks>
-        /// <param name="stream">The stream to read from.</param>
-        /// <param name="encoding">The encoding to use when opening the file.</param>
+        /// <param name="stream">The stream to load from.</param>
+        /// <param name="encoding">The encoding to use when reading the <paramref name="stream"/>.</param>
         /// <param name="clearExisting">Remove existing properties before loading.</param>
-        /// <param name="treatEmptyAsNull">If true, empty values will be added as null.</param>
-        /// <exception cref="InvalidPropertyException">Thrown if a property is declared incorrectly (i.e. missing either a "=" or "~").</exception>
-        /// <returns>True if all properties were successfully loaded; false if some were unable to be loaded (i.e. invalid syntax).</returns>
+        /// <param name="treatEmptyAsNull">If true, empty and whitespace-only values will be added as null.</param>
+        /// <returns>Returns true if all properties were successfully loaded; false if errors were encountered.</returns>
         public bool TryLoad(Stream stream, Encoding encoding, bool clearExisting = true, bool treatEmptyAsNull = false)
         {
             if (Properties == null)
@@ -503,58 +545,85 @@ namespace NetProperty
 
             return ret;
         }
-
+        
         /// <summary>
-        /// Save <see cref="Properties"/> to a given <paramref name="file"/>.
+        /// Saves <see cref="Properties"/> to a specified <paramref name="file"/>.
         /// </summary>
         /// <remarks>
-        /// The <paramref name="file"/> is saved as UTF-8; use <see cref="Save(string,Encoding)"/> for alternate encodings.
+        /// If a property with a null name is encountered, then it will be saved with an empty name.
+        /// <br />
+        /// The <paramref name="file"/> is saved using UTF-8; use <see cref="Save(string,Encoding)"/> for alternate encodings.
         /// </remarks>
         /// <param name="file">The file to save to.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="file"/> is null.</exception>
+        /// <exception cref="NullReferenceException"><see cref="Properties"/> is null.</exception>
         public void Save(string file)
         {
             Save(file, Encoding.UTF8);
         }
 
         /// <summary>
-        /// Save <see cref="Properties"/> to a given <paramref name="stream"/>.
+        /// Saves <see cref="Properties"/> to a specified <paramref name="stream"/>.
         /// </summary>
         /// <remarks>
-        /// The <paramref name="stream"/> is saved as UTF-8; use <see cref="Save(Stream,Encoding)"/> for alternate encodings.
+        /// If a property with a null name is encountered, then it will be saved with an empty name.
+        /// <br />
+        /// The <paramref name="stream"/> is saved using UTF-8; use <see cref="Save(Stream,Encoding)"/> for alternate encodings.
         /// </remarks>
         /// <param name="stream">The stream to save to.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="stream"/> is null.</exception>
+        /// <exception cref="NullReferenceException"><see cref="Properties"/> is null.</exception>
         public void Save(Stream stream)
         {
             Save(stream, Encoding.UTF8);
         }
 
         /// <summary>
-        /// Save <see cref="Properties"/> to a given <paramref name="file"/> using a specified <paramref name="encoding"/>.
+        /// Saves <see cref="Properties"/> to a specified <paramref name="file"/> using a given <paramref name="encoding"/>.
         /// </summary>
+        /// <remarks>
+        /// If a property with a null name is encountered, then it will be saved with an empty name.
+        /// </remarks>
         /// <param name="file">The file to save to.</param>
-        /// <param name="encoding">The encoding to save the <paramref name="file"/> as.</param>
+        /// <param name="encoding">The encoding to use when saving.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="file"/> is null.</exception>
+        /// <exception cref="NullReferenceException"><see cref="Properties"/> is null.</exception>
         public void Save(string file, Encoding encoding)
         {
+            if (file == null)
+                throw new ArgumentNullException(nameof(file));
+            
+            if (Properties == null)
+                throw new NullReferenceException(nameof(Properties));
+
             using (var stream = File.Open(file, FileMode.Create, FileAccess.Write))
                 Save(stream, encoding);
         }
 
         /// <summary>
-        /// Save <see cref="Properties"/> to a given <paramref name="stream"/> using a specified <paramref name="encoding"/>.
+        /// Saves <see cref="Properties"/> to a specified <paramref name="stream"/> using a given <paramref name="encoding"/>.
         /// </summary>
+        /// <remarks>
+        /// If a property with a null name is encountered, then it will be saved with an empty name.
+        /// </remarks>
         /// <param name="stream">The stream to save to.</param>
-        /// <param name="encoding">The encoding to save the <paramref name="stream"/> as.</param>
+        /// <param name="encoding">The encoding to use when saving.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="stream"/> is null.</exception>
+        /// <exception cref="NullReferenceException"><see cref="Properties"/> is null.</exception>
         public void Save(Stream stream, Encoding encoding)
         {
-            if (Properties == null || Properties.Count == 0)
-                return;
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+            
+            if (Properties == null)
+                throw new NullReferenceException(nameof(Properties));
             
             using (var writer = new StreamWriter(stream, encoding))
             {
                 foreach (var property in Properties)
                 {
                     var value = property.Value ?? string.Empty;
-                    
+
                     if (value.Length == 0 || char.IsWhiteSpace(value[0]))
                         writer.WriteLine(property.Key + " ~" + value);
                     else
@@ -562,17 +631,122 @@ namespace NetProperty
                 }
             }
         }
+        
+        /// <summary>
+        /// Tries to save <see cref="Properties"/> to a specified <paramref name="file"/>.
+        /// </summary>
+        /// <remarks>
+        /// If a property with a null name is encountered, then it will be saved with an empty name.
+        /// <br />
+        /// If <paramref name="file"/> or <see cref="Properties"/> is null, then this will return false.
+        /// <br />
+        /// The <paramref name="file"/> is saved using UTF-8; use <see cref="Save(string,Encoding)"/> for alternate encodings.
+        /// </remarks>
+        /// <param name="file">The file to save to.</param>
+        /// <returns>Returns true if the <paramref name="file"/> was successfully saved to; false if not.</returns>
+        public bool TrySave(string file)
+        {
+            return TrySave(file, Encoding.UTF8);
+        }
 
         /// <summary>
-        /// Copy <see cref="Properties"/> to an <paramref name="array"/>.
+        /// Tries to save <see cref="Properties"/> to a specified <paramref name="stream"/>.
+        /// </summary>
+        /// <remarks>
+        /// If a property with a null name is encountered, then it will be saved with an empty name.
+        /// <br />
+        /// If <paramref name="stream"/> or <see cref="Properties"/> is null, then this will return false.
+        /// <br />
+        /// The <paramref name="stream"/> is saved using UTF-8; use <see cref="Save(Stream,Encoding)"/> for alternate encodings.
+        /// </remarks>
+        /// <param name="stream">The stream to save to.</param>
+        /// <returns>Returns true if the <paramref name="stream"/> was successfully saved to; false if not.</returns>
+        public bool TrySave(Stream stream)
+        {
+            return TrySave(stream, Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// Tries to save <see cref="Properties"/> to a specified <paramref name="file"/> using a given <paramref name="encoding"/>.
+        /// </summary>
+        /// <remarks>
+        /// If a property with a null name is encountered, then it will be saved with an empty name.
+        /// <br />
+        /// If <paramref name="file"/> or <see cref="Properties"/> is null, then this will return false.
+        /// </remarks>
+        /// <param name="file">The file to save to.</param>
+        /// <param name="encoding">The encoding to use when saving.</param>
+        /// <returns>Returns true if the <paramref name="file"/> was successfully saved to; false if not.</returns>
+        public bool TrySave(string file, Encoding encoding)
+        {
+            if (file == null || Properties == null)
+                return false;
+
+            using (var stream = File.Open(file, FileMode.Create, FileAccess.Write))
+                return TrySave(stream, encoding);
+        }
+
+        /// <summary>
+        /// Tries to save <see cref="Properties"/> to a specified <paramref name="stream"/> using a given <paramref name="encoding"/>.
+        /// </summary>
+        /// <remarks>
+        /// If a property with a null name is encountered, then it will be saved with an empty name.
+        /// <br />
+        /// If <paramref name="stream"/> or <see cref="Properties"/> is null, then this will return false.
+        /// </remarks>
+        /// <param name="stream">The stream to save to.</param>
+        /// <param name="encoding">The encoding to use when saving.</param>
+        /// <returns>Returns true if the <paramref name="stream"/> was successfully saved to; false if not.</returns>
+        public bool TrySave(Stream stream, Encoding encoding)
+        {
+            if (stream == null || Properties == null)
+                return false;
+
+            try
+            {
+                using (var writer = new StreamWriter(stream, encoding))
+                {
+                    foreach (var property in Properties)
+                    {
+                        var value = property.Value ?? string.Empty;
+
+                        if (value.Length == 0 || char.IsWhiteSpace(value[0]))
+                            writer.WriteLine(property.Key + " ~" + value);
+                        else
+                            writer.WriteLine(property.Key + " = " + value);
+                    }
+                }
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Copies <see cref="Properties"/> to an <paramref name="array"/>, starting at index 0.
         /// </summary>
         /// <param name="array">The array to copy to.</param>
-        /// <param name="index">The index of the array to start copying at.</param>
         /// <exception cref="ArgumentNullException"><paramref name="array"/> is null.</exception>
-        /// <exception cref="ArgumentException">The length of <paramref name="array"/> is too small to fit all properties.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="array"/> is too small to fit all of the properties.</exception>
+        public void CopyTo(KeyValuePair<string, string>[] array)
+        {
+            CopyTo(array, 0);
+        }
+        
+        /// <summary>
+        /// Copies <see cref="Properties"/> to an <paramref name="array"/>,
+        /// starting at a specified <paramref name="index"/>.
+        /// </summary>
+        /// <param name="array">The array to copy to.</param>
+        /// <param name="index">The index of the array to start copying to.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="array"/> is null.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="array"/> is too small to fit all of the properties.</exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        /// <paramref name="index"/> is out of range;
-        /// it's larger than the length of <paramref name="array"/> or less than zero.
+        /// Either <paramref name="index"/> is larger than the length of <paramref name="array"/>, less than zero,
+        /// or leaves no space for all of the properties to be copied into the <paramref name="array"/>.
         /// </exception>
         public void CopyTo(KeyValuePair<string, string>[] array, int index)
         {
@@ -580,15 +754,16 @@ namespace NetProperty
                 throw new ArgumentNullException(nameof(array));
 
             var length = array.Length;
+            var propertyCount = Properties.Count;
 
-            if (Properties.Count > length)
+            if (propertyCount > length)
                 throw new ArgumentException(nameof(array));
 
-            if (index > length || index < 0)
+            if (index > length || index < 0 || index + propertyCount > length)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
             foreach (var property in Properties)
-                array[index--] = property;
+                array[index++] = property;
         }
 
         /// <summary>
@@ -609,12 +784,15 @@ namespace NetProperty
         /// Gets or sets a property's value.
         /// </summary>
         /// <remarks>
-        /// When setting, if there's a possibility of <paramref name="name"/> being null,
-        /// it would be better to use <see cref="SetProperty"/> because it will return false in that case;
-        /// this error-case can then be handled better.
+        /// If the provided property doesn't exist, it will be created.
+        /// <br />
+        /// It may be better to use <see cref="GetProperty(string)"/> and <see cref="SetProperty(string,string)"/>
+        /// directly as they return a bool to help with error-handling.
         /// </remarks>
         /// <param name="name">The property's name.</param>
-        /// <returns>Returns the property's value; if the property doesn't exist or <paramref name="name"/> is null, returns null.</returns>
+        /// <returns>
+        /// Returns the property's value if it exists; or returns null if the property doesn't exist or if the given <paramref name="name"/> is null.
+        /// </returns>
         public string this[string name]
         {
             get => GetProperty(name);
