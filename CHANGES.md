@@ -1,8 +1,11 @@
-# ???
-
 # 2.1.0
-* Add TryLoad for not throwing an exception when there are erroneous properties. 
-* Simplify GetProperty and indexer (no longer using Linq).
+* Rewrote a lot of the xml-comments.
+* Simplify GetProperty and the indexer.
+* Add TryLoad and TrySave, the no-throw versions of Load and Save.
+* Made PropertyFile enumerable; properties can now be iterated over using foreach.
+* Fixed methods not actually creating properties if they don't exist (i.e. Add and the indexer);
+* Added some more error checks.
+    * Property names should never be null.
 
 # 2.0.1
 * Add various different targets:
