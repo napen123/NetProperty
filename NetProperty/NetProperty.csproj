@@ -1,21 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp2.0;net45;net451;net452;net46;net461;net462;net47;net471</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netcoreapp2.0;netcoreapp2.1;net45;net451;net452;net46;net461;net462;net47;net471;net472</TargetFrameworks>
     <Description>A .NET library for reading and writing property files.</Description>
-    <Copyright>Copyright (c) 2016-2018, Ethan Dagner.</Copyright>
+    <Copyright>Copyright (c) 2016-2019, Ethan Dagner.</Copyright>
     <PackageLicenseUrl>https://github.com/napen123/NetProperty/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/napen123/NetProperty</PackageProjectUrl>
     <RepositoryUrl>https://github.com/napen123/NetProperty</RepositoryUrl>
-    <PackageTags>c# csharp .NET dotnet property properties</PackageTags>
-    <PackageReleaseNotes>* Add various different targets:
-	* .NET Framework 4.5 - 4.7.1
-	* .NET Core 2.0
-	* .NET Standard 2.0
-* Fixed a bug related to saving to a nonexistant file.</PackageReleaseNotes>
-    <AssemblyVersion>2.0.1.0</AssemblyVersion>
-    <FileVersion>2.0.1.0</FileVersion>
+    <PackageTags>c# csharp .NET netstandard netcore netframework dotnet property property-files property-file</PackageTags>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <AssemblyVersion>2.1.0.0</AssemblyVersion>
+    <FileVersion>2.1.0.0</FileVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>2.0.1</Version>
+    <Version>2.1.0</Version>
     <Authors>napen123</Authors>
   </PropertyGroup>
 </Project>
