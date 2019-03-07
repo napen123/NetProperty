@@ -625,9 +625,9 @@ namespace NetProperty
                     var value = property.Value ?? string.Empty;
 
                     if (value.Length == 0 || char.IsWhiteSpace(value[0]))
-                        writer.WriteLine(property.Key + " ~" + value);
+                        writer.WriteLine($"{property.Key} ~{value}");
                     else
-                        writer.WriteLine(property.Key + " = " + value);
+                        writer.WriteLine($"{property.Key} = {value}");
                 }
             }
         }
@@ -711,9 +711,9 @@ namespace NetProperty
                         var value = property.Value ?? string.Empty;
 
                         if (value.Length == 0 || char.IsWhiteSpace(value[0]))
-                            writer.WriteLine(property.Key + " ~" + value);
+                            writer.WriteLine($"{property.Key} ~{value}");
                         else
-                            writer.WriteLine(property.Key + " = " + value);
+                            writer.WriteLine($"{property.Key} = {value}");
                     }
                 }
             }
