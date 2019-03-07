@@ -6,6 +6,7 @@
 * Fixed methods not actually creating properties if they don't exist (i.e. Add and the indexer);
 * Added some more error checks.
     * Property names should never be null.
+* Added support for .NET Core 2.1 and .NET Framework 4.7.2.
 
 # 2.0.1
 * Add various different targets:
