@@ -3,7 +3,7 @@
 * Simplify GetProperty and the indexer.
 * Add TryLoad and TrySave, the no-throw versions of Load and Save.
 * Made PropertyFile enumerable; properties can now be iterated over using foreach.
-* Fixed methods not actually creating properties if they don't exist (i.e. Add and the indexer);
+* Fixed methods not actually creating properties if they don't exist (i.e. Add and the indexer).
 * Added some more error checks.
     * Property names should never be null.
 * Added support for .NET Core 2.1 and .NET Framework 4.7.2.
