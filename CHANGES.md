@@ -1,4 +1,4 @@
-# 2.1.0 (Unreleased)
+# 2.1.0
 * Rewrote a lot of the xml-comments.
 * Simplify GetProperty and the indexer.
 * Add TryLoad and TrySave, the no-throw versions of Load and Save.
