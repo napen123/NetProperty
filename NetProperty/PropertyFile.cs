@@ -206,7 +206,7 @@ namespace NetProperty
         /// then it will be overridden instead.
         /// </remarks>
         /// <param name="pair">The name-value pair to create a property from.</param>
-        /// <exception cref="ArgumentNullException">The provided property name is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="pair"/>'s key is null.</exception>
         public void Add(KeyValuePair<string, string> pair)
         {
             Properties[pair.Key] = pair.Value;
@@ -315,12 +315,12 @@ namespace NetProperty
                 return false;
 
             Properties.Remove(name);
-                
+            
             return true;
         }
 
         /// <summary>
-        /// Clears the file's <see cref="Properties"/>.
+        /// Clears all <see cref="Properties"/>.
         /// </summary>
         public void Clear()
         {
